@@ -28,8 +28,11 @@ You are in the right place!
  2) Install Adobe XD ( It's free to use ) and open the .xd file in this folder
  3) Tweek colors and image as you want.
 
-Note:
+**Note:**
 Actually there are only ultrawide resolution, feel free to add new canvas with you style.
+
+**Note 2:**
+You can make these wallpapers with the software you like the most. Do not feel forced to use Adobe, on the contrary we encourage the use of open source software such as [Krita](https://krita.org/en/), [Inkscape](https://inkscape.org/), [GIMP](https://www.gimp.org/) etc..
 
 ## How to contribute
 
