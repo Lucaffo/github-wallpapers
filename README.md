@@ -32,7 +32,7 @@ You are in the right place!
 Actually there are only ultrawide resolution, feel free to add new canvas with you style.
 
 **Note 2:**
-You can make these wallpapers with the software you like the most. Do not feel forced to use Adobe, on the contrary we encourage the use of open source software such as [Krita](https://krita.org/en/), [Inkscape](https://inkscape.org/), [GIMP](https://www.gimp.org/) etc..
+You can make these wallpapers with the software you like the most. Do not feel forced to use Adobe, we encourage the use of open source software such as [Krita](https://krita.org/en/), [Inkscape](https://inkscape.org/), [GIMP](https://www.gimp.org/) etc..
 
 ## How to contribute
 
