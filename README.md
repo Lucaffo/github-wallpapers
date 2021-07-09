@@ -19,8 +19,9 @@ You are in the right place!
 
 ## Showcase
 ![image1](./Wallpapers/3440x1440/Wallpaper1.png)
-![image2](./Wallpapers/3440x1440/Wallpaper-4.png)
-![image2](./Wallpapers/3440x1440/Wallpaper4.png)
+![image2](./Wallpapers/3440x1440/Wallpaper9.png)
+![image3](./Wallpapers/3440x1440/Wallpaper-4.png)
+![image4](./Wallpapers/3440x1440/Wallpaper4.png)
 
  ## How to create your custom palette
  
