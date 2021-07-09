@@ -21,6 +21,6 @@ Actually there are only ultrawide resolution, feel free to add new canvas with y
 
 ## How to contribute
 
-You can contribute to this project creating new wallpapers to put inside teh _"/Wallpapers"_ folder. 
+You can contribute to this project creating new wallpapers to put inside teh _"/Wallpapers/[Resolution]"_ folder. 
 
 After that create a pull requests and i will almost 100% accept your contribution! 
