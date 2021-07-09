@@ -6,9 +6,9 @@ Still looking for your own custom github wallpaper? You haven't found anything o
 You are in the right place!
 
 ## Showcase
-![[Wallpaper1.png]]
-![[Wallpaper-4.png]]
-![[Wallpaper4.png]]
+![image1](./Wallpapers/3440x1440/Wallpaper1.png)
+![image2](./Wallpapers/3440x1440/Wallpaper-4.png)
+![image2](./Wallpapers/3440x1440/Wallpaper4.png)
 
  ## How to create your custom palette
  
