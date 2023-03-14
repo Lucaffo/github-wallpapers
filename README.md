@@ -25,18 +25,17 @@ You are in the right place!
 
  ## How to create your custom palette
  
- 1) Clone this repository.
- 2) Install Adobe XD ( It's free to use ) and open the .xd file in this folder
- 3) Tweek colors and image as you want.
+1) Open an image editor as you wish.
+2) Create a new file with the correct resolutions in pixels.
+3) Grab one of our octofriends from here: https://octodex.github.com/
 
 **Note:**
-Actually there are only ultrawide resolution, feel free to add new canvas with you style.
-
-**Note 2:**
-You can make these wallpapers with the software you like the most. Do not feel forced to use Adobe, we encourage the use of open source software such as [Krita](https://krita.org/en/), [Inkscape](https://inkscape.org/), [GIMP](https://www.gimp.org/) etc..
+If you don't know where to start, download an open source software such as 
+- [Krita](https://krita.org/en/)
+- [Inkscape](https://inkscape.org/)
+- [GIMP](https://www.gimp.org/) etc..
 
 ## How to contribute
-
+Actually, in this repository there are only 21:9 wallpapers...
 You can contribute to this project creating new wallpapers to put inside teh _"/Wallpapers/[Resolution]"_ folder. 
-
 After that create a pull requests and i will almost 100% accept your contribution! 
