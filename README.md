@@ -10,10 +10,10 @@
 
 </div>
 <div align="center">
-    <h4> A unofficial github related wallpaper repository.</h4>
+    <h4> A GitHub-related wallpaper repository.</h4>
 </div>
 
-Still looking for your own custom github wallpaper? You haven't found anything on the internet, because hasn't anyone ever posted a palette you might like?
+Still looking for your own custom GitHub wallpaper? You haven't found anything on the internet, because hasn't anyone ever posted a palette you might like?
 
 You are in the right place!
 
@@ -30,12 +30,12 @@ You are in the right place!
 3) Grab one of our octofriends from here: https://octodex.github.com/
 
 **Note:**
-If you don't know where to start, download an open source software such as 
+If you don't know where to start, download an open-source software such as 
 - [Krita](https://krita.org/en/)
 - [Inkscape](https://inkscape.org/)
 - [GIMP](https://www.gimp.org/) etc..
 
 ## How to contribute
-Actually, in this repository there are only 21:9 wallpapers...
-You can contribute to this project creating new wallpapers to put inside teh _"/Wallpapers/[Resolution]"_ folder. 
-After that create a pull requests and i will almost 100% accept your contribution! 
+Actually, in this repository, there are only 21:9 wallpapers...
+You can contribute to this project by creating new wallpapers to put inside the _"/Wallpapers/[Resolution]"_ folder. 
+Create a pull request and I will almost 100% accept your contribution! 
