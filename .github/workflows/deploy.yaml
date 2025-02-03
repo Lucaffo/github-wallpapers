@@ -28,8 +28,13 @@ jobs:
           cd dart/web
           dart compile js -o main.js main.dart
 
+      - name: Move files to deployment directory
+        run: |
+          mkdir public
+          cp -r dart/web/* public/
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: dart/web
+          publish_dir: public
