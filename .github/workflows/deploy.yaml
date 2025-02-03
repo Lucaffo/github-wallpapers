@@ -38,21 +38,26 @@ jobs:
         run: |
           mkdir -p public/static/logos
           mkdir -p public/static/octocats
-          cp -L dart/web/index.html public/
-          cp -L dart/web/main.js public/
-          cp -L dart/web/styles.css public/
-          cp -aL Logos/. public/static/logos/
-          cp -aL Octocats/. public/static/octocats/
+          cp dart/web/index.html public/
+          cp dart/web/main.js public/
+          cp dart/web/styles.css public/
+          cp -a Logos/. public/static/logos/
+          cp -a Octocats/. public/static/octocats/
 
-      # Appiattiamo il contenuto della cartella public in una cartella temporanea "artifact"
+      # Flatten the deployment directory into a temporary "artifact" folder
       - name: Flatten deployment directory for artifact
         run: |
           rm -rf artifact
           mkdir artifact
           cp -rL public/* artifact/
+          # Remove any symlinks if present (just in case)
           find artifact -type l -exec rm {} \;
           echo "Contents of artifact directory:"
           find artifact
+
+      # Set proper permissions for all files in the artifact folder
+      - name: Set file permissions for artifact
+        run: chmod -R a+rX artifact
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
