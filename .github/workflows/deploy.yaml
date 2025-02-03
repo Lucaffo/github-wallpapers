@@ -34,6 +34,11 @@ jobs:
           cp -r dart/web/index.html public/
           cp -r dart/web/main.js public/
           cp -r dart/web/styles.css public/
+          mkdir public/static/
+          mkdir public/static/logos
+          cp -r Logos/* public/static/logos
+          mkdir public/static/octocats
+          cp -r Octocats/* public/static/octocats
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
