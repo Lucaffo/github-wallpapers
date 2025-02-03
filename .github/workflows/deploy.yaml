@@ -12,7 +12,7 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,19 +24,15 @@ jobs:
         with:
           sdk: stable
 
-      - name: Install Dependencies
+      - name: Install Dependencies and Compile
         run: |
           cd dart/web
           dart pub get
-
-      - name: Compile Dart to JavaScript
-        run: |
-          cd dart/web
           dart compile js -o main.js main.dart
 
       - name: Prepare site folder
         run: |
-          mkdir -p site/
+          mkdir -p site
           cp dart/web/index.html site/
           cp dart/web/main.js site/
           cp dart/web/styles.css site/
@@ -45,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: site
+          path: site/
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
