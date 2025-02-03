@@ -13,7 +13,6 @@ permissions:
   id-token: write
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
 
@@ -38,33 +37,34 @@ jobs:
 
       - name: Move files to deployment directory
         run: |
-          mkdir public
-          cp -r dart/web/index.html public/
-          cp -r dart/web/main.js public/
-          cp -r dart/web/styles.css public/
-          mkdir public/static/
-          mkdir public/static/logos
-          cp -r Logos/* public/static/logos
-          mkdir public/static/octocats
-          cp -r Octocats/* public/static/octocats
+          mkdir -p public/static/logos
+          mkdir -p public/static/octocats
+          cp dart/web/index.html public/
+          cp dart/web/main.js public/
+          cp dart/web/styles.css public/
+          cp -r Logos/* public/static/logos/
+          cp -r Octocats/* public/static/octocats/
 
-      - name: Upload artifact for GitHub Pages
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
+          name: github-pages
           path: public
 
   deploy:
     needs: build
-
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: public
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
