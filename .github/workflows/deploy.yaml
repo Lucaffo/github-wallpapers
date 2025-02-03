@@ -45,6 +45,10 @@ jobs:
           cp -r Logos/* public/static/logos/
           cp -r Octocats/* public/static/octocats/
 
+      - name: Remove symlinks from public directory
+        run: |
+          find public -type l -exec rm {} \;
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
