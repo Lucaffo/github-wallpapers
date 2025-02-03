@@ -23,7 +23,7 @@ Future<void> generateWallpaper(int width, int height, double logoSize) async {
 
   // Creiamo un'immagine dall'avatar
   ImageElement logo = ImageElement();
-  logo.src = 'https://lucaffo.github.io/github-wallpapers/logos';
+  logo.src = 'https://lucaffo.github.io/github-wallpapers/static/logos/github.png';
 
   await logo.onLoad.first; // Aspettiamo che l'immagine si carichi
 
