@@ -44,19 +44,8 @@ jobs:
           cp -a Logos/. site/static/logos/
           cp -a Octocats/. site/static/octocats/
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: github-pages
-          path: site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-
-    steps:
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          branch: gh-pages
+          folder: site
