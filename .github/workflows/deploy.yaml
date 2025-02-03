@@ -34,7 +34,11 @@ jobs:
           cp -r dart/web/* public/
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: public
+          branch: gh-pages
+          folder: dart/web/
+          clean: true
+
+    name: Deploy Dart Web to GitHub Pages
+    
