@@ -31,7 +31,9 @@ jobs:
       - name: Move files to deployment directory
         run: |
           mkdir public
-          cp -r dart/web/* public/
+          cp -r dart/web/index.html public/
+          cp -r dart/web/main.js public/
+          cp -r dart/web/styles.css public/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
