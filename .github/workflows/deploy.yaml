@@ -42,8 +42,8 @@ jobs:
           cp dart/web/index.html public/
           cp dart/web/main.js public/
           cp dart/web/styles.css public/
-          cp -r Logos/* public/static/logos/
-          cp -r Octocats/* public/static/octocats/
+          cp -a Logos/. public/static/logos/
+          cp -a Octocats/. public/static/octocats/
 
       - name: Remove symlinks from public directory
         run: |
