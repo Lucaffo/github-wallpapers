@@ -36,8 +36,7 @@ jobs:
 
       - name: Prepare site folder
         run: |
-          mkdir -p site/static/logos
-          mkdir -p site/static/octocats
+          mkdir -p site/
           cp dart/web/index.html site/
           cp dart/web/main.js site/
           cp dart/web/styles.css site/
