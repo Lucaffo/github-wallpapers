@@ -43,8 +43,8 @@ jobs:
           cp dart/web/index.html site/
           cp dart/web/main.js site/
           cp dart/web/styles.css site/
-          cp -a Logos/. site/static/logos/
-          cp -a Octocats/. site/static/octocats/
+          cp -r Logos/. site/static/logos/
+          cp -r Octocats/. site/static/octocats/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
