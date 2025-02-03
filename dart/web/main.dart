@@ -5,7 +5,8 @@ import 'package:image/image.dart' as img;
 import 'dart:html';
 
 void main() {
-   querySelector("#generate")!.onClick.listen((_) => generateWallpaper(1920, 1080, 0.5));
+   querySelector("#generate-1920x1080")!.onClick.listen((_) => generateWallpaper(1920, 1080, 0.5));
+   querySelector("#generate-3440x1440")!.onClick.listen((_) => generateWallpaper(3440, 1440, 0.35));
 }
 
 Future<void> generateWallpaper(int width, int height, double logoSize) async {
