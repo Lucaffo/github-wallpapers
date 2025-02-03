@@ -9,7 +9,6 @@ environment:
 # Add regular dependencies here.
 dependencies:
   web: ^0.5.1
-  dart: html
   image: ^3.0.1
 
 dev_dependencies:
