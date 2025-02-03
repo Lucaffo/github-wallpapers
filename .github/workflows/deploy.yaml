@@ -5,6 +5,14 @@ on:
     branches:
       - generator-dart
 
+  # Abilita il deploy automatico
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,12 +48,18 @@ jobs:
           mkdir public/static/octocats
           cp -r Octocats/* public/static/octocats
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v2
         with:
-          branch: gh-pages
-          folder: dart/web/
-          clean: true
+          path: public
 
-    name: Deploy Dart Web to GitHub Pages
-    
+    deploy:
+      needs: build
+      runs-on: ubuntu-latest
+      environment:
+        name: github-pages
+        url: ${{ steps.deployment.outputs.page_url }}
+      steps:
+        name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
