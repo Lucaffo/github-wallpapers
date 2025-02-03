@@ -6,8 +6,13 @@ on:
       - generator-dart
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
-  build_and_deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,15 +24,20 @@ jobs:
         with:
           sdk: stable
 
-      - name: Install Dependencies & Compile
+      - name: Install Dependencies
         run: |
           cd dart/web
           dart pub get
+
+      - name: Compile Dart to JavaScript
+        run: |
+          cd dart/web
           dart compile js -o main.js main.dart
 
       - name: Prepare site folder
         run: |
-          mkdir -p site
+          mkdir -p site/static/logos
+          mkdir -p site/static/octocats
           cp dart/web/index.html site/
           cp dart/web/main.js site/
           cp dart/web/styles.css site/
