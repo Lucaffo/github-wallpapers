@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - generator-dart
-
   workflow_dispatch:
 
 permissions:
@@ -45,15 +44,11 @@ jobs:
           cp -a Logos/. public/static/logos/
           cp -a Octocats/. public/static/octocats/
 
-      - name: Remove symlinks from public directory
-        run: |
-          find public -type l -exec rm {} \;
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: public
+          path: public/**
 
   deploy:
     needs: build
