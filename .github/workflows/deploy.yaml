@@ -1,0 +1,35 @@
+name: Deploy Dart Web App
+
+on:
+  push:
+    branches:
+      - generator-dart
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install Dependencies
+        run: |
+          cd dart/web
+          dart pub get
+
+      - name: Compile Dart to JavaScript
+        run: |
+          cd dart/web
+          dart compile js -o main.js main.dart
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: dart/web
