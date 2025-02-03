@@ -49,7 +49,7 @@ jobs:
         run: chmod -R a+rX site
 
       - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           # L'azione si aspetta che l'artefatto sia chiamato "github-pages"
           # Di default il nome è impostato correttamente, basta fornire il path
