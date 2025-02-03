@@ -34,9 +34,8 @@ jobs:
           cd dart/web
           dart compile js -o main.js main.dart
 
-      - name: Move files to deployment directory
+      - name: Prepare site folder
         run: |
-          # Creiamo la cartella "site" che conterrà i file da deployare
           mkdir -p site/static/logos
           mkdir -p site/static/octocats
           cp dart/web/index.html site/
@@ -45,14 +44,10 @@ jobs:
           cp -a Logos/. site/static/logos/
           cp -a Octocats/. site/static/octocats/
 
-      - name: Fix file permissions
-        run: chmod -R a+rX site
-
-      - name: Upload Pages Artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          # L'azione si aspetta che l'artefatto sia chiamato "github-pages"
-          # Di default il nome è impostato correttamente, basta fornire il path
+          name: github-pages
           path: site
 
   deploy:
@@ -60,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
