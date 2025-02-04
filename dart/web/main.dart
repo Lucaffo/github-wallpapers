@@ -19,6 +19,6 @@ Future<void> generateWallpaper(int width, int height, double logoSize) async
 {
   CanvasElement canvas = querySelector(canvasId) as CanvasElement;
   CanvasRenderingContext2D ctx = canvas.context2D;
-  Wallpaper wTest = Wallpaper("https://lucaffo.github.io/github-wallpapers/static/configurations/wallpaper_01.json");
+  Wallpaper wTest = Wallpaper("https://lucaffo.github.io/github-wallpapers/static/wallpapers/wallpaper_01.json");
   wTest.draw(ctx);
 }
