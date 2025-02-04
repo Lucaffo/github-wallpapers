@@ -1,5 +1,8 @@
 import 'dart:html';
+
 import '../Images/image_url.dart';
+import '../Images/image_urls.dart';
+
 import 'wallpaper_background_drawer.dart';
 import 'wallpaper_drawer.dart';
 import 'wallpaper_logo_drawer.dart';
@@ -7,6 +10,9 @@ import 'wallpaper_logo_position.dart';
 
 class WallpaperGeneration0 extends WallpaperDrawer
 {
+    static final ImageUrls logos = ImageUrls("logos", "https://lucaffo.github.io/github-wallpapers/static/logos/paths.json");
+    static final ImageUrls octocats = ImageUrls("octocats", "https://lucaffo.github.io/github-wallpapers/static/octocats/paths.json");
+
     final Map<String, dynamic> _map;
     
     int? _width;
@@ -19,6 +25,10 @@ class WallpaperGeneration0 extends WallpaperDrawer
     @override
     Future draw(CanvasRenderingContext2D ctx) async
     {
+        // Read the logo and octocats collections
+        await logos.readAllUrls();
+        await octocats.readAllUrls();
+
         // Configure the wallpaper from the json
         createDrawersFromJson(_map);
 
@@ -56,6 +66,14 @@ class WallpaperGeneration0 extends WallpaperDrawer
                 {
                     x = position["x"];
                     y = position["y"];
+                }
+
+                ImageUrl? logoUrl;
+
+                var type = logo["type"].toString().toLowerCase();
+                if (type == "octocat")
+                {
+                    logoUrl = octocats.search(logo["src"]);
                 }
 
                 var color = logo["color"];

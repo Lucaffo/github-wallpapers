@@ -76,4 +76,19 @@ class ImageUrls
     {
         return _urls.length;
     }
+
+    // Search the first logo with than name
+    ImageUrl? search(String logo) 
+    {
+        for(int i = 0; i < _urls.length; i++)
+        {
+            if(_urls[i].getFileName(false)!.contains(logo))
+            {
+                return _urls[i];
+            }
+        }
+
+        // Return a random url else
+        return getRandomUrl();
+    }
 }
