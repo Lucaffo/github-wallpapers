@@ -73,7 +73,7 @@ class WallpaperGeneration0 extends WallpaperDrawer
                 var type = logo["type"].toString().toLowerCase();
                 if (type == "octocat")
                 {
-                    logoUrl = octocats.search(logo["src"]);
+                    logoUrl = octocats.search(logo["name"]);
                 }
 
                 var color = logo["color"];

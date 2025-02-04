@@ -78,13 +78,16 @@ class ImageUrls
     }
 
     // Search the first logo with than name
-    ImageUrl? search(String logo) 
+    ImageUrl? search(String? logo) 
     {
-        for(int i = 0; i < _urls.length; i++)
+        if (logo != null)
         {
-            if(_urls[i].getFileName(false)!.contains(logo))
+            for(int i = 0; i < _urls.length; i++)
             {
-                return _urls[i];
+                if(_urls[i].getFileName(false)!.contains(logo))
+                {
+                    return _urls[i];
+                }
             }
         }
 
