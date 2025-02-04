@@ -18,6 +18,7 @@ class Wallpaper extends WallpaperDrawer
 {
     String jsonPath;
 
+    // ignore: unused_field
     int? _version;
     int? _width;
     int? _height;

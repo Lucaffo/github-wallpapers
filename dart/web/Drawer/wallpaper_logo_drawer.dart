@@ -1,4 +1,3 @@
-import 'package:image/image.dart';
 import 'dart:html';
 import 'wallpaper_drawer.dart';
 import 'wallpaper_logo_position.dart';
