@@ -12,9 +12,10 @@ import 'image_url.dart';
 class ImageUrls 
 {
     final String _jsonPath;
+    final String _name;
     final List<ImageUrl> _urls = [];
     
-    ImageUrls(this._jsonPath)
+    ImageUrls(this._name, this._jsonPath)
     {
         ReadAllUrls(_jsonPath);
     }
@@ -27,14 +28,19 @@ class ImageUrls
         final Map<String, dynamic> map = json.decode(jsonString);
         
         var paths = map["paths"];
+        print(paths);
+
         if(paths != null)
         { 
             _urls.clear();
             paths.forEach((v) => 
             {
+                print(v);
                 _urls.add(ImageUrl(v))
             });
         }
+
+        print("Added all the urls to $_name");
     }
 
     // Get a random url form the urls

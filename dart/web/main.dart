@@ -1,11 +1,10 @@
-import 'package:image/image.dart' as img;
 import 'dart:html';
 import 'Images/image_urls.dart';
 
 const String canvasId = "#output";
 
-final ImageUrls logos = ImageUrls("https://lucaffo.github.io/github-wallpapers/static/logos/paths.json");
-final ImageUrls octocats = ImageUrls("https://lucaffo.github.io/github-wallpapers/static/octocats/paths.json");
+ImageUrls logos = ImageUrls("logos", "https://lucaffo.github.io/github-wallpapers/static/logos/paths.json");
+ImageUrls octocats = ImageUrls("octocats", "https://lucaffo.github.io/github-wallpapers/static/octocats/paths.json");
 
 void main() 
 {
