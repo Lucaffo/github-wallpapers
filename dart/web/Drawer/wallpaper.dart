@@ -2,6 +2,7 @@ import 'dart:html';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../Images/image_url.dart';
 import 'wallpaper_drawer.dart';
 import 'wallpaper_logo_drawer.dart';
 import 'wallpaper_logo_position.dart';
@@ -99,7 +100,7 @@ class Wallpaper extends WallpaperDrawer
                 var color = logo["color"];
                 var src = logo["src"];
 
-                _logoDrawer = WallpaperLogoDrawer(size, WallpaperLogoPosition(x, y), color, src);
+                _logoDrawer = WallpaperLogoDrawer(size, WallpaperLogoPosition(x, y), color, ImageUrl(src));
             }
 
             var background = wallpaper["background"];
@@ -107,8 +108,13 @@ class Wallpaper extends WallpaperDrawer
             {
                 var color = background["color"];
                 var src = background["src"];
-
-                _backgroundDrawer = WallpaperBackgroundDrawer(color, src);
+                var imgUrlSrc = null;
+                if(src != null)
+                {
+                    imgUrlSrc = ImageUrl(src);
+                }
+                
+                _backgroundDrawer = WallpaperBackgroundDrawer(color, imgUrlSrc);
             }
         }
     } 

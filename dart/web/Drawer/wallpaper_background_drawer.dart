@@ -1,4 +1,3 @@
-import 'package:image/image.dart';
 import 'dart:html';
 import '../Images/image_url.dart';
 import 'wallpaper_drawer.dart';
@@ -11,7 +10,7 @@ import 'wallpaper_drawer.dart';
 */ 
 class WallpaperBackgroundDrawer extends WallpaperDrawer
 {
-    Color color;
+    String color;
     ImageUrl? path;
 
     WallpaperBackgroundDrawer(this.color, this.path);
@@ -25,6 +24,7 @@ class WallpaperBackgroundDrawer extends WallpaperDrawer
         {
             background.width = ctx.canvas.width!;
             background.height = ctx.canvas.height!;
+            background.style.backgroundColor = color;
         }else
         {
             background.src = path?.getFullPath();
