@@ -1,6 +1,3 @@
-
-import 'dart:io';
-import 'package:web/web.dart' as web;
 import 'package:image/image.dart' as img;
 import 'dart:html';
 
