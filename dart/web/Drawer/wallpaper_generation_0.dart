@@ -77,9 +77,8 @@ class WallpaperGeneration0 extends WallpaperDrawer
                 }
 
                 var color = logo["color"];
-                var src = logo["src"];
-
-                _logoDrawer = WallpaperLogoDrawer(size, WallpaperLogoPosition(x, y), color, ImageUrl(src));
+                
+                _logoDrawer = WallpaperLogoDrawer(size, WallpaperLogoPosition(x, y), color, logoUrl);
             }
 
             var background = wallpaper["background"];

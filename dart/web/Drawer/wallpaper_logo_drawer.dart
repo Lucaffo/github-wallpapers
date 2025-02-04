@@ -14,7 +14,7 @@ class WallpaperLogoDrawer extends WallpaperDrawer
     double size;
     WallpaperLogoPosition position;
     String color;
-    ImageUrl path;
+    ImageUrl? path;
 
     WallpaperLogoDrawer(this.size, this.position, this.color, this.path);
     
@@ -23,7 +23,7 @@ class WallpaperLogoDrawer extends WallpaperDrawer
     {
         ImageElement logo = ImageElement();
 
-        logo.src = path.getFullPath();
+        logo.src = path?.getFullPath();
         await logo.onLoad.first; 
 
         logo.style.color = color;
