@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 import 'image_url.dart';
+import 'package:http/http.dart' as http;
 
 /*
 *  Image Urls class. 
@@ -22,10 +22,20 @@ class ImageUrls
     
     // Read all the urls from a json path
     // Write all the results into the @urls
-    void _readAllUrls(String jsonPath)
+    void _readAllUrls(String jsonPath) async
     {
-        String jsonString = File(jsonPath).readAsStringSync();
-        final Map<String, dynamic> map = json.decode(jsonString);
+        Uri uri = Uri.parse(jsonPath);
+        final http.Response res = await http.get(uri);
+        if(res.statusCode == 200)
+        {
+            _populateUrlsFromJson(res.body);
+        }
+    }
+
+    // Populate the urls array from a json content
+    void _populateUrlsFromJson(String jsonContent) 
+    {
+        final Map<String, dynamic> map = json.decode(jsonContent);
         
         var paths = map["paths"];
         print(paths);
@@ -42,11 +52,12 @@ class ImageUrls
         }
 
         print("Added all the urls to $_name");
-    }
+    } 
 
     // Get a random url form the urls
-    ImageUrl getRandomUrl()
+    ImageUrl? getRandomUrl()
     {
+        if(_urls.isEmpty) return null;
         var randomIndex = Random().nextInt(_urls.length);
         return _urls.elementAt(randomIndex);
     }

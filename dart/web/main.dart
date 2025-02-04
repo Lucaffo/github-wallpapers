@@ -8,8 +8,8 @@ ImageUrls octocats = ImageUrls("octocats", "https://lucaffo.github.io/github-wal
 
 void main() 
 {
-   querySelector("#generate-1920x1080")!.onClick.listen((_) => generateWallpaper(1920, 1080, 0.5));
-   querySelector("#generate-3440x1440")!.onClick.listen((_) => generateWallpaper(3440, 1440, 0.35));
+    querySelector("#generate-1920x1080")?.onClick.listen((_) => generateWallpaper(1920, 1080, 0.5));
+    querySelector("#generate-3440x1440")?.onClick.listen((_) => generateWallpaper(3440, 1440, 0.35));
 }
 
 Future<void> generateWallpaper(int width, int height, double logoSize) async {
@@ -29,9 +29,9 @@ Future<void> generateWallpaper(int width, int height, double logoSize) async {
   ImageElement logo = ImageElement();
   try
   {
-      logo.src = logos.getRandomUrl().getFullPath();
-      
-  } on Exception catch(e)
+      logo.src = logos.getRandomUrl()?.getFullPath();
+  } 
+  on Exception catch(e)
   {
       print(e);
   }
