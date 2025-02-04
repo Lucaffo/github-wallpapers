@@ -17,12 +17,12 @@ class ImageUrls
     
     ImageUrls(this._name, this._jsonPath)
     {
-        ReadAllUrls(_jsonPath);
+        _readAllUrls(_jsonPath);
     }
     
     // Read all the urls from a json path
     // Write all the results into the @urls
-    void ReadAllUrls(String jsonPath)
+    void _readAllUrls(String jsonPath)
     {
         String jsonString = File(jsonPath).readAsStringSync();
         final Map<String, dynamic> map = json.decode(jsonString);
@@ -45,21 +45,21 @@ class ImageUrls
     }
 
     // Get a random url form the urls
-    ImageUrl GetRandomUrl()
+    ImageUrl getRandomUrl()
     {
         var randomIndex = Random().nextInt(_urls.length);
         return _urls.elementAt(randomIndex);
     }
 
     // Get a url using an index
-    ImageUrl? GetUrlAt(int index)
+    ImageUrl? getUrlAt(int index)
     {
         if (index < 0 || index >= _urls.length) return null;
         return _urls.elementAt(index);
     }
 
     // Get the number of urls
-    int GetUrlsNumber()
+    int getUrlsNumber()
     {
         return _urls.length;
     }

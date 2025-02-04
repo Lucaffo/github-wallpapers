@@ -27,7 +27,14 @@ Future<void> generateWallpaper(int width, int height, double logoSize) async {
 
   // Creiamo un'immagine dall'avatar
   ImageElement logo = ImageElement();
-  logo.src = logos.GetRandomUrl().GetFullPath();
+  try
+  {
+      logo.src = logos.getRandomUrl().getFullPath();
+      
+  } on Exception catch(e)
+  {
+      print(e);
+  }
 
   await logo.onLoad.first; // Aspettiamo che l'immagine si carichi
 

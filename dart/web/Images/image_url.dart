@@ -27,25 +27,25 @@ class ImageUrl
     }
 
     // Get the full path toward the image
-    String GetFullPath()
+    String getFullPath()
     {
         return _fullPath;
     }
 
     // Ge the base path of the full path
-    String? GetBasePath()
+    String? getBasePath()
     {
         return _basePath;
     }
 
     // Get the filename, with extension if needed.
-    String? GetFileName(bool withExtension)
+    String? getFileName(bool withExtension)
     {
         return withExtension ? '$_filename.$_extension' : _filename;
     }
 
     // Get the file extension
-    String? GetFileExtension()
+    String? getFileExtension()
     {
         return _extension;
     }
