@@ -6,8 +6,10 @@ const String canvasId = "#output";
 ImageUrls logos = ImageUrls("logos", "https://lucaffo.github.io/github-wallpapers/static/logos/paths.json");
 ImageUrls octocats = ImageUrls("octocats", "https://lucaffo.github.io/github-wallpapers/static/octocats/paths.json");
 
-void main() 
+void main() async
 {
+    await logos.readAllUrls();
+    await octocats.readAllUrls();
     querySelector("#generate-1920x1080")?.onClick.listen((_) => generateWallpaper(1920, 1080, 0.5));
     querySelector("#generate-3440x1440")?.onClick.listen((_) => generateWallpaper(3440, 1440, 0.35));
 }

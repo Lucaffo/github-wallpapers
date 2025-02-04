@@ -15,14 +15,16 @@ class ImageUrls
     final String _name;
     final List<ImageUrl> _urls = [];
     
-    ImageUrls(this._name, this._jsonPath)
-    {
-        _readAllUrls(_jsonPath);
-    }
+    ImageUrls(this._name, this._jsonPath);
     
     // Read all the urls from a json path
     // Write all the results into the @urls
-    void _readAllUrls(String jsonPath) async
+    Future readAllUrls() async
+    {
+        await _readFromUrl(_jsonPath);
+    }
+
+    Future _readFromUrl(String jsonPath) async
     {
         Uri uri = Uri.parse(jsonPath);
         final http.Response res = await http.get(uri);
