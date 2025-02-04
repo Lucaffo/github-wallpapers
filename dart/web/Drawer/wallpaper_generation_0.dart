@@ -7,18 +7,21 @@ import 'wallpaper_logo_position.dart';
 
 class WallpaperGeneration0 extends WallpaperDrawer
 {
-    final Map<String, dynamic> map;
+    final Map<String, dynamic> _map;
     
     int? _width;
     int? _height;
     WallpaperLogoDrawer? _logoDrawer;
     WallpaperBackgroundDrawer? _backgroundDrawer;
 
-    WallpaperGeneration0(this.map);
+    WallpaperGeneration0(this._map);
 
     @override
     Future draw(CanvasRenderingContext2D ctx) async
     {
+        // Configure the wallpaper from the json
+        createDrawersFromJson(_map);
+
         // Make sure the canvas size is set
         ctx.canvas.width = _width;
         ctx.canvas.height = _height;
@@ -34,7 +37,7 @@ class WallpaperGeneration0 extends WallpaperDrawer
         await _logoDrawer?.draw(ctx);
     }
 
-    void configureWallpaperFromJson(String jsonContent) 
+    void createDrawersFromJson(Map<String, dynamic> map) 
     {
         var wallpaper = map["wallpaper"];
         if (wallpaper != null)
@@ -66,7 +69,8 @@ class WallpaperGeneration0 extends WallpaperDrawer
             {
                 var color = background["color"];
                 var src = background["src"];
-                var imgUrlSrc = null;
+                ImageUrl? imgUrlSrc;
+
                 if(src != null)
                 {
                     imgUrlSrc = ImageUrl(src);
