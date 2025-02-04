@@ -33,9 +33,10 @@ class ImageUrls
         if(paths != null)
         { 
             _urls.clear();
+
             paths.forEach((v) => 
             {
-                print(v);
+                print(v),
                 _urls.add(ImageUrl(v))
             });
         }
