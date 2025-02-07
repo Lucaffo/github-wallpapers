@@ -1,6 +1,6 @@
 import 'dart:html';
-import '../Images/image_url.dart';
 import 'wallpaper_drawer.dart';
+import 'dart:convert';
 
 /*
 *   Wallpaper Logo Background Class.
@@ -8,29 +8,39 @@ import 'wallpaper_drawer.dart';
 *
 *   Luca Raffo @ 04/02/2025
 */ 
-class WallpaperBackgroundDrawer extends WallpaperDrawer
-{
-    String color;
-    ImageUrl? path;
+class WallpaperBackgroundDrawer extends WallpaperDrawer {
 
-    WallpaperBackgroundDrawer(this.color, this.path);
+    String color;
+    String? src;
+
+    WallpaperBackgroundDrawer ({
+      required this.color, 
+      this.src
+    });
+
+    factory WallpaperBackgroundDrawer.fromRawJson(String str) => WallpaperBackgroundDrawer.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
+
+    factory WallpaperBackgroundDrawer.fromJson(Map<String, dynamic> json) => WallpaperBackgroundDrawer(
+        color: json["color"],
+        src: json["src"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "color": color,
+        "src": src,
+    };
     
     @override
     Future draw(CanvasRenderingContext2D ctx) async
     {
-        ImageElement background = ImageElement();
+      CanvasElement tempCanvas = CanvasElement(width: ctx.canvas.width, height: ctx.canvas.height);
+      CanvasRenderingContext2D tempCtx = tempCanvas.context2D;
 
-        if (path == null)
-        {
-            background.width = ctx.canvas.width!;
-            background.height = ctx.canvas.height!;
-            background.style.backgroundColor = color;
-        }else
-        {
-            background.src = path?.getFullPath();
-            await background.onLoad.first; 
-        }
-
-        ctx.drawImageScaled(background, 0, 0, ctx.canvas.width!, ctx.canvas.height!);
+      tempCtx.fillStyle = color;
+      tempCtx.fillRect(0, 0, tempCanvas.width!, tempCanvas.height!);
+      
+      ctx.drawImageScaled(tempCanvas, 0, 0, ctx.canvas.width!, ctx.canvas.height!);
     }
 }

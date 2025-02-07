@@ -1,100 +1,56 @@
 import 'dart:html';
-
-import '../Images/image_url.dart';
-import '../Images/image_urls.dart';
+import 'dart:convert';
 
 import 'wallpaper_background_drawer.dart';
 import 'wallpaper_drawer.dart';
 import 'wallpaper_logo_drawer.dart';
-import 'wallpaper_logo_position.dart';
 
-class WallpaperGeneration0 extends WallpaperDrawer
-{
-    static final ImageUrls logos = ImageUrls("logos", "https://lucaffo.github.io/github-wallpapers/static/logos/paths.json");
-    static final ImageUrls octocats = ImageUrls("octocats", "https://lucaffo.github.io/github-wallpapers/static/octocats/paths.json");
-
-    final Map<String, dynamic> _map;
+class WallpaperGeneration0 extends WallpaperDrawer {
     
-    int? _width;
-    int? _height;
-    WallpaperLogoDrawer? _logoDrawer;
-    WallpaperBackgroundDrawer? _backgroundDrawer;
+    int? width;
+    int? height;
+    WallpaperLogoDrawer? logo;
+    WallpaperBackgroundDrawer? background;
 
-    WallpaperGeneration0(this._map);
+    WallpaperGeneration0({
+        this.width,
+        this.height,
+        this.logo,
+        this.background,
+    });
+
+    factory WallpaperGeneration0.fromRawJson(String str) => WallpaperGeneration0.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
+
+    factory WallpaperGeneration0.fromJson(Map<String, dynamic> json) => WallpaperGeneration0(
+        width: json["width"],
+        height: json["height"],
+        logo: json["logo"] == null ? null : WallpaperLogoDrawer.fromJson(json["logo"]),
+        background: json["background"] == null ? null : WallpaperBackgroundDrawer.fromJson(json["background"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "width": width,
+        "height": height,
+        "logo": logo?.toJson(),
+        "background": background?.toJson(),
+    };
 
     @override
     Future draw(CanvasRenderingContext2D ctx) async
     {
-        // Read the logo and octocats collections
-        await logos.readAllUrls();
-        await octocats.readAllUrls();
-
-        // Configure the wallpaper from the json
-        createDrawersFromJson(_map);
-
         // Make sure the canvas size is set
-        ctx.canvas.width = _width;
-        ctx.canvas.height = _height;
+        ctx.canvas.width = width;
+        ctx.canvas.height = height;
 
         // Make sure the default color of the canvas is clear
-        ctx.fillStyle = "clear";
-        ctx.fillRect(0, 0, _width!, _height!);
+        ctx.fillRect(0, 0, width!, height!);
 
         // Draw the background
-        await _backgroundDrawer?.draw(ctx);
+        await background!.draw(ctx);
 
         // Draw the logo
-        await _logoDrawer?.draw(ctx);
-    }
-
-    void createDrawersFromJson(Map<String, dynamic> map) 
-    {
-        var wallpaper = map["wallpaper"];
-        if (wallpaper != null)
-        {
-            _width = wallpaper["width"];
-            _height = wallpaper["height"];
-            var logo = wallpaper["logo"];
-            if (logo != null)
-            {
-                var size = logo["size"];
-                var position = logo["position"];
-                double x = 0;
-                double y = 0;
-
-                if (position != null)
-                {
-                    x = position["x"];
-                    y = position["y"];
-                }
-
-                ImageUrl? logoUrl;
-
-                var type = logo["type"].toString().toLowerCase();
-                if (type == "octocat")
-                {
-                    logoUrl = octocats.search(logo["name"]);
-                }
-
-                var color = logo["color"];
-                
-                _logoDrawer = WallpaperLogoDrawer(size, WallpaperLogoPosition(x, y), color, logoUrl);
-            }
-
-            var background = wallpaper["background"];
-            if (background != null)
-            {
-                var color = background["color"];
-                var src = background["src"];
-                ImageUrl? imgUrlSrc;
-
-                if(src != null)
-                {
-                    imgUrlSrc = ImageUrl(src);
-                }
-                
-                _backgroundDrawer = WallpaperBackgroundDrawer(color, imgUrlSrc);
-            }
-        }
+        await logo!.draw(ctx);
     } 
 }
