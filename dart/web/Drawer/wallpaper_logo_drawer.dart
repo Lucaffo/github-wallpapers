@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:math';
 import 'wallpaper_drawer.dart';
 import 'wallpaper_logo_position.dart';
 import '../Images/image_url.dart';
@@ -50,22 +51,28 @@ class WallpaperLogoDrawer extends WallpaperDrawer
     @override
     Future draw(CanvasRenderingContext2D ctx) async
     {
+        if (type == null || type!.isEmpty) return;
+        if (name == null || name!.isEmpty) return; 
+
+        ImageUrl? logoSrc = await ImageCollections.getByTypeAndName(type, name);
+        if (logoSrc == null) return;
+
         ImageElement logo = ImageElement();
-        
-        // if (type == null || type!.isEmpty) return;
-        // if (name == null || name!.isEmpty) return; 
-
-        ImageUrl? logoSrc = await ImageCollections.getRandomLogo();
-        // ImageUrl? logoSrc = await ImageCollections.getByTypeAndName(type, name);
-        // if (logoSrc == null) return;
-
-        logo.src = logoSrc?.getFullPath();
+        logo.src = logoSrc.getFullPath();
         await logo.onLoad.first; 
-
-        logo.style.color = color;
 
         int logoWidth = (logo.width! * size).toInt();
         int logoHeight = (logo.height! * size).toInt();
+        
+        CanvasElement logoCanvas = CanvasElement(width: logo.width, height: logo.height);
+        CanvasRenderingContext2D logoCtx = logoCanvas.context2D;
+
+        logoCtx.drawImage(logo, 0, 0);
+        logoCtx.globalCompositeOperation = 'multiply';
+        logoCtx.fillStyle = color;
+        logoCtx.fillRect(0, 0, logo.width!.toDouble(), logo.height!.toDouble());
+        logoCtx.globalCompositeOperation = 'destination-in';
+        logoCtx.drawImage(logo, 0, 0);
 
         num logoPosX = position?.x != null ? position!.x : 0.5;
         num logoPosY = position?.y != null ? position!.y : 0.5;
@@ -73,6 +80,6 @@ class WallpaperLogoDrawer extends WallpaperDrawer
         num centerX = ((ctx.canvas.width! * logoPosX) - logoWidth / 2);
         num centerY = ((ctx.canvas.height! * logoPosY) - logoHeight / 2);
 
-        ctx.drawImageScaled(logo, centerX, centerY, logoWidth, logoHeight);
+        ctx.drawImageScaled(logoCanvas, centerX, centerY, logoWidth, logoHeight);
     }
 }
