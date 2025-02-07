@@ -1,7 +1,9 @@
-import 'dart:convert';
 import 'dart:math';
-import 'image_url.dart';
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
+import 'image_url.dart';
 
 /*
 *  Image Urls class.
