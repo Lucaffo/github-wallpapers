@@ -7,8 +7,9 @@ final class ImageCollections {
 
     static final ImageUrls logos = ImageUrls("logos", "https://lucaffo.github.io/github-wallpapers/static/logos/paths.json");
     static final ImageUrls octocats = ImageUrls("octocats", "https://lucaffo.github.io/github-wallpapers/static/octocats/paths.json");
+    static final ImageUrls backgrounds = ImageUrls("octocats", "https://lucaffo.github.io/github-wallpapers/static/backgrounds/paths.json");
 
-    static Future<ImageUrl?> getByTypeAndName(String? type, String? name) async {
+    static Future<ImageUrl?> getLogoByTypeAndNamea(String? type, String? name) async {
 
         if (type == null || name == null) return null;
 
@@ -27,6 +28,15 @@ final class ImageCollections {
 
         return null;
     }
+    
+    static Future<ImageUrl?> getBackgroundByName(String? name) async {
+
+        if (name == null) return null;
+        name = name.toLowerCase();
+
+        await backgrounds.readAllUrls();
+        return backgrounds.search(name);
+    } 
 
     static Future<ImageUrl?> getRandomLogo() async
     {

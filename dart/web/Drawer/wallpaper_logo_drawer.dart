@@ -55,7 +55,7 @@ class WallpaperLogoDrawer extends WallpaperDrawer
         if (type == null || type!.isEmpty) return;
         if (name == null || name!.isEmpty) return; 
 
-        ImageUrl? logoSrc = await ImageCollections.getByTypeAndName(type, name);
+        ImageUrl? logoSrc = await ImageCollections.getLogoByTypeAndNamea(type, name);
         if (logoSrc == null) return;
 
         ImageElement logo = ImageElement();

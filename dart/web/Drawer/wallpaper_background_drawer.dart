@@ -3,6 +3,9 @@ import 'dart:convert';
 
 import 'wallpaper_drawer.dart';
 
+import '../Images/image_url.dart';
+import '../Images/image_collections.dart';
+
 /*
 *   Wallpaper Logo Background Class.
 *   This is responsible for drawing the background of the canvas.
@@ -12,10 +15,12 @@ import 'wallpaper_drawer.dart';
 class WallpaperBackgroundDrawer extends WallpaperDrawer {
 
     String color;
+    String? name;
     String? src;
 
     WallpaperBackgroundDrawer ({
       required this.color, 
+      this.name,
       this.src
     });
 
@@ -25,11 +30,13 @@ class WallpaperBackgroundDrawer extends WallpaperDrawer {
 
     factory WallpaperBackgroundDrawer.fromJson(Map<String, dynamic> json) => WallpaperBackgroundDrawer(
         color: json["color"],
+        name: json["name"],
         src: json["src"],
     );
 
     Map<String, dynamic> toJson() => {
         "color": color,
+        "name" : name,
         "src": src,
     };
     
@@ -46,7 +53,18 @@ class WallpaperBackgroundDrawer extends WallpaperDrawer {
         await backgroundImage.onLoad.first; 
         tempCtx.drawImage(backgroundImage, 0, 0);
         tempCtx.globalCompositeOperation = 'multiply';
+      }else if(name != null && name!.isNotEmpty){
+        ImageElement backgroundImage = ImageElement();
+        ImageUrl? backgroundSrc = await ImageCollections.getBackgroundByName(name);
+        if (backgroundSrc != null){
+          backgroundImage.src = backgroundSrc.getFullPath();
+          backgroundImage.crossOrigin = 'anonymous';
+          await backgroundImage.onLoad.first; 
+          tempCtx.drawImage(backgroundImage, 0, 0);
+          tempCtx.globalCompositeOperation = 'multiply';
+        }
       }
+
 
       tempCtx.fillStyle = color;
       tempCtx.fillRect(0, 0, tempCanvas.width!.toDouble(), tempCanvas.height!.toDouble());

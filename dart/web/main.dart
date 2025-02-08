@@ -1,5 +1,6 @@
 import 'dart:html';
 import 'dart:convert';
+import 'dart:math';
 
 import 'Drawer/wallpaper_drawer.dart';
 import 'Drawer/wallpaper_drawer_factory.dart';
@@ -7,6 +8,8 @@ import 'Drawer/wallpaper_drawer_factory.dart';
 const String canvasId = "#output";
 const String textAreaId = "#input";
 const String saveBtnId = "#save-btn";
+
+const int numberOfConfigurations = 4;
 
 void main() async {
     
@@ -18,7 +21,7 @@ void main() async {
 }
 
 Future<void> setFirstWallpaper () async {
-  (WallpaperDrawer?, String?) drawer = await WallpaperDrawerFactory.getWallpaperDrawer(1);
+  (WallpaperDrawer?, String?) drawer = await WallpaperDrawerFactory.getWallpaperDrawer(Random.secure().nextInt(numberOfConfigurations) + 1);
   setWallpaper(drawer.$1, drawer.$2);
 }
 
