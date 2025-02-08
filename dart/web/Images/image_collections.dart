@@ -7,7 +7,7 @@ final class ImageCollections {
 
     static final ImageUrls logos = ImageUrls("logos", "https://lucaffo.github.io/github-wallpapers/static/logos/paths.json");
     static final ImageUrls octocats = ImageUrls("octocats", "https://lucaffo.github.io/github-wallpapers/static/octocats/paths.json");
-    static final ImageUrls backgrounds = ImageUrls("octocats", "https://lucaffo.github.io/github-wallpapers/static/backgrounds/paths.json");
+    static final ImageUrls backgrounds = ImageUrls("backgrounds", "https://lucaffo.github.io/github-wallpapers/static/backgrounds/paths.json");
 
     static Future<ImageUrl?> getLogoByTypeAndNamea(String? type, String? name) async {
 
