@@ -60,6 +60,7 @@ class WallpaperLogoDrawer extends WallpaperDrawer
 
         ImageElement logo = ImageElement();
         logo.src = logoSrc.getFullPath();
+        logo.crossOrigin = 'anonymous';
         await logo.onLoad.first; 
 
         int logoWidth = (logo.width! * size).toInt();

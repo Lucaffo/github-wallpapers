@@ -6,6 +6,7 @@ import 'Drawer/wallpaper_drawer_factory.dart';
 
 const String canvasId = "#output";
 const String textAreaId = "#input";
+const String saveBtnId = "#save-btn";
 
 void main() async {
     
@@ -22,24 +23,26 @@ Future<void> setFirstWallpaper () async {
 }
 
 void bindUI() {
-    querySelector("#input")?.onChange.listen((_) => updateWallpaper());
-    querySelector("#input")?.onInput.listen((_) => updateWallpaper());
-    querySelector("#toggleTextArea")?.onClick.listen((_) => toggleTextArea());
+    querySelector(textAreaId)?.onChange.listen((_) => updateWallpaper());
+    querySelector(textAreaId)?.onInput.listen((_) => updateWallpaper());
+    querySelector(saveBtnId)?.onClick.listen((_) => saveImage());
 }
 
-void toggleTextArea(){
-  bool? state = querySelector(textAreaId)?.hidden;
-  querySelector(textAreaId)?.hidden = state == null ? false : !state;
+void saveImage() {
+  print("Wallpaper Save");
+  CanvasElement canvas = querySelector(canvasId) as CanvasElement;
+  String dataUrl = canvas.toDataUrl('image/png');
+  
+  final anchor = AnchorElement(href: dataUrl)
+    ..target = 'blank'
+    ..download = 'canvas_image.png';
+
+  anchor.click();
 }
 
 Future<void> updateWallpaper() async {
   print("Wallpaper Update");
-  TextAreaElement textArea = querySelector(textAreaId) as TextAreaElement;
-
-  String jsonString = textArea.value!.trim();
-  Map<String, dynamic> jsonData = jsonDecode(jsonString);
-  String compactJson = jsonEncode(jsonData);
-
+  String compactJson = getJsonFromTextArea();
   (WallpaperDrawer?, String?) drawer = await WallpaperDrawerFactory.getDrawerFromJson(compactJson);
   updateCanvas(drawer.$1);
 }
@@ -64,4 +67,11 @@ void updateCanvas(WallpaperDrawer? drawer) {
   CanvasElement canvas = querySelector(canvasId) as CanvasElement;
   CanvasRenderingContext2D ctx = canvas.context2D;
   drawer?.draw(ctx);
+}
+
+String getJsonFromTextArea() {
+  TextAreaElement textArea = querySelector(textAreaId) as TextAreaElement;
+  String jsonString = textArea.value!.trim();
+  Map<String, dynamic> jsonData = jsonDecode(jsonString);
+  return jsonEncode(jsonData);
 }

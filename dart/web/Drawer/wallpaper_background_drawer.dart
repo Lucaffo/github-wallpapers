@@ -42,6 +42,7 @@ class WallpaperBackgroundDrawer extends WallpaperDrawer {
       if (src != null && src!.isNotEmpty) {
         ImageElement backgroundImage = ImageElement();
         backgroundImage.src = src;
+        backgroundImage.crossOrigin = 'anonymous';
         await backgroundImage.onLoad.first; 
         tempCtx.drawImage(backgroundImage, 0, 0);
         tempCtx.globalCompositeOperation = 'multiply';

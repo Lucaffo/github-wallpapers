@@ -8,10 +8,10 @@
   <meta name="scaffolded-by" content="https://github.com/dart-lang/sdk">
   <title>Github Wallpaper</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="button-styles.css">
 </head>
 
 <body>
+  <button class="save-button" id="save-btn">Save</button>
   <div class="container">
     <textarea id="input" cols="50" rows="22" spellcheck="false"></textarea>
     <div class="handle" id="resize-handle"></div>
@@ -23,6 +23,7 @@
     const handle = document.getElementById("resize-handle");
     const textarea = document.getElementById("input");
     const canvasContainer = document.querySelector(".canvas-container");
+    const canvas = document.getElementById("output");
 
     let isResizing = false;
 
