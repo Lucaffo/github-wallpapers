@@ -7,6 +7,8 @@ import 'wallpaper_logo_position.dart';
 import '../Images/image_url.dart';
 import '../Images/image_collections.dart';
 
+import '../Extensions/canvas_context_ext.dart';
+
 /*
 *   Wallpaper Logo Drawer Class.
 *   This is responsible for drawing a logo on the canvas.
@@ -17,6 +19,7 @@ class WallpaperLogoDrawer extends WallpaperDrawer
 {
     String? type;
     String? name;
+    String? blend;
     double size;
     WallpaperLogoPosition? position;
     String? color;
@@ -24,6 +27,7 @@ class WallpaperLogoDrawer extends WallpaperDrawer
     WallpaperLogoDrawer({
         this.type,
         this.name,
+        this.blend,
         this.size = 1,
         this.position,
         this.color,
@@ -34,6 +38,7 @@ class WallpaperLogoDrawer extends WallpaperDrawer
     factory WallpaperLogoDrawer.fromJson(Map<String, dynamic> json) => WallpaperLogoDrawer (
         type: json["type"],
         name: json["name"],
+        blend: json["blend"],
         size: json["size"]?.toDouble(),
         position: json["position"] == null ? null : WallpaperLogoPosition.fromJson(json["position"]),
         color: json["color"],
@@ -44,6 +49,7 @@ class WallpaperLogoDrawer extends WallpaperDrawer
     Map<String, dynamic> toJson() => {
         "type": type,
         "name": name,
+        "blend" : blend,
         "size": size,
         "position": position?.toJson(),
         "color": color,
@@ -70,11 +76,11 @@ class WallpaperLogoDrawer extends WallpaperDrawer
         CanvasRenderingContext2D logoCtx = logoCanvas.context2D;
 
         logoCtx.drawImage(logo, 0, 0);
-        logoCtx.globalCompositeOperation = 'source-in';
-        logoCtx.fillStyle = color;
+        logoCtx.globalCompositeOperation = blend != null ? blend! : 'multiply';
+        logoCtx.setFillStyleAndAlpha(color);
         logoCtx.fillRect(0, 0, logo.width!.toDouble(), logo.height!.toDouble());
-        //logoCtx.globalCompositeOperation = 'source-over';
-        //logoCtx.drawImage(logo, 0, 0);
+        logoCtx.globalCompositeOperation = "destination-atop"; // restore transparency
+        logoCtx.drawImage(logo, 0, 0);
 
         num logoPosX = position?.x != null ? position!.x : 0.5;
         num logoPosY = position?.y != null ? position!.y : 0.5;
