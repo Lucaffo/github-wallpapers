@@ -41,12 +41,14 @@ jobs:
           mkdir -p site/static/logos
           mkdir -p site/static/octocats
           mkdir -p site/static/wallpapers
+          mkdir -p site/static/backgrounds
           cp dart/web/index.html site/
           cp dart/web/main.js site/
           cp dart/web/styles.css site/
           cp -r Logos/. site/static/logos/
           cp -r Octocats/. site/static/octocats/
           cp -r Configurations/. site/static/wallpapers/
+          cp -r Backgrounds/. site/static/backgrounds/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
