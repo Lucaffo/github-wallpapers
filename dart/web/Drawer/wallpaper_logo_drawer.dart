@@ -70,11 +70,11 @@ class WallpaperLogoDrawer extends WallpaperDrawer
         CanvasRenderingContext2D logoCtx = logoCanvas.context2D;
 
         logoCtx.drawImage(logo, 0, 0);
-        logoCtx.globalCompositeOperation = 'multiply';
+        logoCtx.globalCompositeOperation = 'source-in';
         logoCtx.fillStyle = color;
         logoCtx.fillRect(0, 0, logo.width!.toDouble(), logo.height!.toDouble());
-        logoCtx.globalCompositeOperation = 'destination-in';
-        logoCtx.drawImage(logo, 0, 0);
+        //logoCtx.globalCompositeOperation = 'source-over';
+        //logoCtx.drawImage(logo, 0, 0);
 
         num logoPosX = position?.x != null ? position!.x : 0.5;
         num logoPosY = position?.y != null ? position!.y : 0.5;
