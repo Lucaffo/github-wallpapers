@@ -3,8 +3,6 @@ import 'dart:convert';
 
 import 'wallpaper_drawer.dart';
 
-import '../Images/image_collections.dart';
-
 /*
 *   Wallpaper Logo Background Class.
 *   This is responsible for drawing the background of the canvas.
