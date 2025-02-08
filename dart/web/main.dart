@@ -9,7 +9,7 @@ const String canvasId = "#output";
 const String textAreaId = "#input";
 const String saveBtnId = "#save-btn";
 
-const int numberOfConfigurations = 4;
+const int numberOfConfigurations = 5;
 
 void main() async {
     
