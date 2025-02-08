@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'image_urls.dart';
 import 'image_url.dart';
 
@@ -30,5 +32,20 @@ final class ImageCollections {
     {
         await logos.readAllUrls();
         return logos.getRandomUrl();
+    }
+
+    static Future<ImageUrl?> getRandomOctocat() async
+    {
+        await octocats.readAllUrls();
+        return octocats.getRandomUrl();
+    }
+
+    static String generateHexColor() {
+      Random random = Random();
+      String colore = '#';
+      for (int i = 0; i < 6; i++) {
+        colore += random.nextInt(16).toRadixString(16).padLeft(1, '0').toUpperCase();
+      }
+      return colore;
     }
 }

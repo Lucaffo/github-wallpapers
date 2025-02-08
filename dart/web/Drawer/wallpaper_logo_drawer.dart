@@ -1,5 +1,6 @@
 import 'dart:html';
 import 'dart:convert';
+import 'dart:math';
 
 import 'wallpaper_drawer.dart';
 import 'wallpaper_logo_position.dart';
