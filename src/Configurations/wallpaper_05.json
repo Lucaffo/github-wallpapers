@@ -11,13 +11,12 @@
         "x": 0.5,
         "y": 0.5
       },
-      "color": "rgba(150, 150, 150, 0.8)",
-      "blend": "source-in"
+      "color": "rgba(150, 150, 150, 0.8)"
     },
     "background": {
       "color": "#888888",
-      "src" : null,
-      "name" : "japan"
-    } 
+      "src": null,
+      "name": "japan"
+    }
   }
 }
