@@ -46,7 +46,7 @@ jobs:
           cp dart/web/styles.css site/
           cp -r Logos/. site/static/logos/
           cp -r Octocats/. site/static/octocats/
-          cp -r Wallpapers/Configurations/. site/static/wallpapers/
+          cp -r Configurations/. site/static/wallpapers/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

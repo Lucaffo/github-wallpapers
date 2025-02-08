@@ -1,0 +1,22 @@
+{
+    "version": 0,
+    "wallpaper" : 
+    {
+        "width" : 3440,
+        "height" : 1440,
+        "logo" : {
+            "type" : "Logo",
+            "name" : "github",
+            "size" : 0.5,
+            "position" : {
+                "x" : 0.5,
+                "y" : 0.5
+            },
+            "color" : "#000000"
+        },
+        "background" : {
+            "color" : "#fdffeb",
+            "src" : null
+        }
+    }
+}
