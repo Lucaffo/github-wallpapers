@@ -43,7 +43,7 @@ What are you waiting for? Open the [Wallpaper Editor](https://lucaffo.github.io/
 
 Equals to
 
-<img src="https://raw.githubusercontent.com/Lucaffo/github-wallpapers/main/src/Examples/japan_example.png"/>
+<img src="https://raw.githubusercontent.com/Lucaffo/github-wallpapers/main/src/examples/japan_example.png"/>
 
 ## Documentation
 TODO
