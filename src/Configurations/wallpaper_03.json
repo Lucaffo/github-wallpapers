@@ -1,0 +1,21 @@
+{
+  "version": 0,
+  "wallpaper": {
+    "width": 1080,
+    "height": 1920,
+    "logo": {
+      "type": "octocat",
+      "name": "vinil",
+      "size": 0.8,
+      "position": {
+        "x": 0.5,
+        "y": 0.45
+      },
+      "color": "rgba(150, 100, 100, 0.8)"
+    },
+    "background": {
+      "color": "rgb(150, 100, 100)",
+      "src": null
+    }
+  }
+}

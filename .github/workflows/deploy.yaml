@@ -1,0 +1,64 @@
+name: Deploy Dart Web App
+
+on:
+  push:
+    branches:
+      - generator-dart
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Install Dependencies
+        run: |
+          cd dart/web
+          dart pub get
+
+      - name: Compile Dart to JavaScript
+        run: |
+          cd dart/web
+          dart compile js -o main.js main.dart
+
+      - name: Prepare site folder
+        run: |
+          mkdir -p site
+          mkdir -p site/static
+          mkdir -p site/static/logos
+          mkdir -p site/static/octocats
+          mkdir -p site/static/wallpapers
+          mkdir -p site/static/backgrounds
+          mkdir -p site/static/examples
+          cp dart/web/index.html site/
+          cp dart/web/main.js site/
+          cp dart/web/styles.css site/
+          cp -r src/Logos/. site/static/logos/
+          cp -r src/Octocats/. site/static/octocats/
+          cp -r src/Configurations/. site/static/wallpapers/
+          cp -r src/Backgrounds/. site/static/backgrounds/
+          cp -r src/Examples/. site/static/examples
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages
+          path: site/
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages

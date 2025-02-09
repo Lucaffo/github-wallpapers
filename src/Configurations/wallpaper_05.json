@@ -1,0 +1,22 @@
+{
+  "version": 0,
+  "wallpaper": {
+    "width": 5120,
+    "height": 2160,
+    "logo": {
+      "type": "logo",
+      "name": "github",
+      "size": 1,
+      "position": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "color": "rgba(150, 150, 150, 0.8)"
+    },
+    "background": {
+      "color": "#888888",
+      "src": null,
+      "name": "japan"
+    }
+  }
+}
