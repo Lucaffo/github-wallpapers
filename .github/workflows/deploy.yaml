@@ -43,9 +43,11 @@ jobs:
           mkdir -p site/static/wallpapers
           mkdir -p site/static/backgrounds
           mkdir -p site/static/examples
+          mkdir -p site/static/favicons
           cp dart/web/index.html site/
           cp dart/web/main.js site/
           cp dart/web/styles.css site/
+          cp -r src/favicons/. site/static/favicons
           cp -r src/Logos/. site/static/logos/
           cp -r src/Octocats/. site/static/octocats/
           cp -r src/Configurations/. site/static/wallpapers/
