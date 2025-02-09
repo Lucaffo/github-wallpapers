@@ -48,11 +48,24 @@ body {
   height: auto;
 }
 
-.save-button {
+.home-button-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.save-button-container {
   position: absolute;
   top: 10px;
   right: 10px;
-  padding: 10px 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.button {
+  position: relative;
   background-color: #007bff;
   color: white;
   border: none;
@@ -60,8 +73,16 @@ body {
   font-size: 16px;
   cursor: pointer;
   transition: background 0.3s;
+  padding: 10px 20px;
 }
 
-.save-button:hover {
+.button i {
+  font-size: 20px;
+  color: white;
+}
+
+.button:hover {
   background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
