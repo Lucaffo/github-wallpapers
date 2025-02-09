@@ -1,20 +1,20 @@
 {
   "version": 0,
   "wallpaper": {
-    "width": 1080,
-    "height": 1920,
+    "width": 1280,
+    "height": 2140,
     "logo": {
       "type": "octocat",
-      "name": "vinil",
-      "size": 0.8,
+      "name": "manufactureto",
+      "size": 0.2,
       "position": {
         "x": 0.5,
-        "y": 0.45
+        "y": 0.48
       },
-      "color": "rgba(150, 100, 100, 0.8)"
+      "color": "rgba(255, 255, 255, 0.95)"
     },
     "background": {
-      "color": "rgb(150, 100, 100)",
+      "color": "rgb(200, 200, 170)",
       "src": null
     }
   }

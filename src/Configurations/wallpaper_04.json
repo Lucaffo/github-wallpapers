@@ -11,11 +11,11 @@
         "x": 0.5,
         "y": 0.5
       },
-      "color": "rgba(100, 100, 255, 1)"
+      "color": "rgba(200, 180, 255, 1)"
     },
     "background": {
       "color": "#888888",
-      "src": "https://lucaffo.github.io/github-wallpapers/static/backgrounds/space.png"
+      "name": "space"
     }
   }
 }
