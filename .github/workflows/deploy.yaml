@@ -3,7 +3,7 @@ name: Deploy Dart Web App
 on:
   push:
     branches:
-      - generator-dart
+      - main
   workflow_dispatch:
 
 permissions:
