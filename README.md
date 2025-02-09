@@ -24,7 +24,7 @@ What are you waiting for? Open the [Wallpaper Editor](https://lucaffo.github.io/
     "height": 2160,
     "logo": {
       "type": "logo",
-      "name": "github",
+      "name": "invertocat",
       "size": 1,
       "position": {
         "x": 0.5,
@@ -41,7 +41,8 @@ What are you waiting for? Open the [Wallpaper Editor](https://lucaffo.github.io/
 }
 ```
 
-Translate into this
+Equals to
+
 <img src="https://raw.githubusercontent.com/Lucaffo/github-wallpapers/main/src/Examples/japan_example.png"/>
 
 ## Documentation
