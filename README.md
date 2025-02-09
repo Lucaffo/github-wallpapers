@@ -41,8 +41,7 @@ What are you waiting for? Open the [Wallpaper Editor](https://lucaffo.github.io/
 }
 ```
 Translate into this
-
-<img src ="https://lucaffo.github.io/github-wallpapers/static/examples/japan_example.png"/>
+[<img src="https://lucaffo.github.io/github-wallpapers/static/examples/japan_example.png">](https://lucaffo.github.io/github-wallpapers/static/examples/japan_example.png)
 
 ## Documentation
 TODO
