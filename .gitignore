@@ -1,2 +1,3 @@
 dart/*.lock
 dart/web/*.map
+dart/web/main.js.map
