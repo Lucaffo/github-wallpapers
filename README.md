@@ -8,7 +8,7 @@
 
 </div>
 <div align="center">
-    <h4> A GitHub-related wallpaper repository.</h4>
+    <h4> A Github Wallpaper Repository</h4>
 </div>
 
 Still looking for your own **CUSTOM** GitHub wallpaper? You haven't found anything on the internet, because no one has ever posted a palette you like (yet)?
@@ -16,9 +16,36 @@ Still looking for your own **CUSTOM** GitHub wallpaper? You haven't found anythi
 What are you waiting for? Open the [Wallpaper Editor](https://lucaffo.github.io/github-wallpapers/)!
 
 ## Example
-TODO
+```json
+{
+  "version": 0,
+  "wallpaper": {
+    "width": 5120,
+    "height": 2160,
+    "logo": {
+      "type": "logo",
+      "name": "github",
+      "size": 1,
+      "position": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "color": "rgba(150, 150, 150, 0.8)"
+    },
+    "background": {
+      "color": "#888888",
+      "src": null,
+      "name": "japan"
+    }
+  }
+}
+```
+Translate into this
+
+<img src ="https://lucaffo.github.io/github-wallpapers/static/example/japan_example.png"/>
 
 ## Documentation
+TODO
 
 ## How to contribute
 TODO
