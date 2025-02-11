@@ -2,8 +2,8 @@ import 'dart:html';
 import 'dart:convert';
 import 'dart:math';
 
-import '../lib/drawer/wallpaper_drawer.dart';
-import '../lib/drawer/wallpaper_drawer_factory.dart';
+import 'drawer/wallpaper_drawer.dart';
+import 'drawer/wallpaper_drawer_factory.dart';
 
 const String canvasId = "#output";
 const String textAreaId = "#input";
