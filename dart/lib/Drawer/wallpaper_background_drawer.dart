@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'wallpaper_drawer.dart';
 
-import '../Images/image_url.dart';
-import '../Images/image_collections.dart';
+import 'package:dart/images/image_url.dart';
+import 'package:dart/images/image_collections.dart';
 
 /*
 *   Wallpaper Logo Background Class.

@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'wallpaper_drawer.dart';
 import 'wallpaper_logo_position.dart';
 
-import '../Images/image_url.dart';
-import '../Images/image_collections.dart';
+import 'package:dart/Images/image_url.dart';
+import 'package:dart/Images/image_collections.dart';
 
 import '../Extensions/canvas_context_ext.dart';
 
