@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile Dart to JS",
+            "type": "shell",
+            "command": "dart",
+            "args": [
+                "compile",
+                "js",
+                "${workspaceFolder}/dart/web/main.dart",
+                "-o",
+                "${workspaceFolder}/dart/web/main.js"
+            ]
+        }
+    ]
+}
