@@ -2,12 +2,30 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build Dart",
+            "label": "Dart Pub Get",
             "type": "shell",
             "command": "dart",
             "args":[
                 "pub",
                 "get"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/dart"
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
+            "label": "Dart Pub Upgrade",
+            "type": "shell",    
+            "command": "dart",
+            "args":[
+                "pub",
+                "upgrade"
             ],
             "options": {
                 "cwd": "${workspaceFolder}/dart"
@@ -36,7 +54,10 @@
                 "showReuseMessage": true,
                 "clear": true
             },
-            "dependsOn": "Build Dart"
+            "dependsOn": [
+                "Dart Pub Get",
+                "Dart Pub Upgrade"
+            ]
         }
     ]
 }
