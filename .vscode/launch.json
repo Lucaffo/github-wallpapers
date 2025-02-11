@@ -10,7 +10,7 @@
             "preLaunchTask": "Compile Dart to JS",
             "request": "launch",
             "type": "dart",
-            "program": "../dart/web/main.dart"
+            "program": "${workspaceFolder}/dart/web/main.dart"
         }
     ]
 }
