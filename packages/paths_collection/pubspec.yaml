@@ -1,7 +1,6 @@
-name: wallpaper
-description: the wallpaper class model and its parser
+name: paths_collection
+description: file path collection management
 version: 1.0.0
-publish_to: none
 
 environment:
   sdk: ^3.6.1
