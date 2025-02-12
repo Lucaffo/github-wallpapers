@@ -58,6 +58,25 @@
                 "Dart Pub Get",
                 "Dart Pub Upgrade"
             ]
+        },
+        {
+            "label" : "Create Dart Package",
+            "type": "shell",
+            "command": "dart",
+            "args": [
+                "create",
+                "-t",
+                "package-simple",
+                "/packages/${input:packageName}"
+            ]
+        }
+    ],
+    "inputs": [
+        {
+            "id": "packageName",
+            "description": "PackageName:",
+            "default": "my_package",
+            "type": "promptString"
         }
     ]
 }
