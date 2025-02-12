@@ -8,12 +8,12 @@ import 'dart:convert';
 */ 
 class WallpaperBackground {
 
-    String color;
+    String? color;
     String? name;
     String? src;
 
     WallpaperBackground ({
-      required this.color, 
+      this.color, 
       this.name,
       this.src
     });
