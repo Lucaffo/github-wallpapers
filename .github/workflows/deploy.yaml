@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - new-dart-generator
   workflow_dispatch:
 
 permissions:

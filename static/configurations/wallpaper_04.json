@@ -1,21 +1,18 @@
 {
-  "version": 0,
-  "wallpaper": {
-    "width": 1920,
-    "height": 1080,
-    "logo": {
-      "type": "octocat",
-      "name": "yoga",
-      "size": 0.5,
-      "position": {
-        "x": 0.5,
-        "y": 0.5
-      },
-      "color": "rgba(200, 180, 255, 1)"
+  "width": 1920,
+  "height": 1080,
+  "logo": [{
+    "type": "octocat",
+    "name": "yoga",
+    "size": 0.5,
+    "position": {
+      "x": 0.5,
+      "y": 0.5
     },
-    "background": {
-      "color": "#888888",
-      "name": "space"
-    }
+    "color": "rgba(200, 180, 255, 1)"
+  }],
+  "background": {
+    "color": "#888888",
+    "name": "space"
   }
 }

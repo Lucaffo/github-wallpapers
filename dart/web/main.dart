@@ -2,8 +2,10 @@ import 'dart:html';
 import 'dart:convert';
 import 'dart:math';
 
-import 'drawer/wallpaper_drawer.dart';
-import 'drawer/wallpaper_drawer_factory.dart';
+import 'package:wallpaper/wallpaper.dart';
+import 'package:wallpaper_generator/wallpaper_generator.dart';
+
+import 'package:image/image.dart';
 
 const String canvasId = "#output";
 const String textAreaId = "#input";
@@ -21,8 +23,9 @@ void main() async {
 }
 
 Future<void> setFirstWallpaper () async {
-  (WallpaperDrawer?, String?) drawer = await WallpaperDrawerFactory.getWallpaperDrawer(Random.secure().nextInt(numberOfConfigurations) + 1);
-  setWallpaper(drawer.$1, drawer.$2);
+  HTTPWallpaperFactory httpWallpaperFactory = HTTPWallpaperFactory();
+  Wallpaper? wallpaper = await httpWallpaperFactory.getWallpaper(getRandomInitialConfiguration());
+  setWallpaper(wallpaper);
 }
 
 void bindUI() {
@@ -46,14 +49,14 @@ void saveImage() {
 Future<void> updateWallpaper() async {
   print("Wallpaper Update");
   String compactJson = getJsonFromTextArea();
-  (WallpaperDrawer?, String?) drawer = await WallpaperDrawerFactory.getDrawerFromJson(compactJson);
-  updateCanvas(drawer.$1);
+  Wallpaper? wallpaper = Wallpaper.fromRawJson(compactJson);
+  setWallpaper(wallpaper);
 }
 
-void setWallpaper(WallpaperDrawer? drawer, String? jsonString) {
-  if (drawer == null || jsonString == null) return;
-  setJsonInTextArea(jsonString);
-  updateCanvas(drawer);
+void setWallpaper(Wallpaper? wallpaper) {
+  if (wallpaper == null) return;
+  setJsonInTextArea(wallpaper.toRawJson());
+  updateCanvas(wallpaper);
 }
 
 void setJsonInTextArea(String? jsonString) {
@@ -66,10 +69,18 @@ void setJsonInTextArea(String? jsonString) {
   textArea.text = prettyprint;
 }
 
-void updateCanvas(WallpaperDrawer? drawer) {
+Future updateCanvas(Wallpaper? wallpaper) async {
+  if (wallpaper == null) return;
+
+  Image? image = await WallpaperGenerator.generateWallpaper(wallpaper);
+  if (image == null) return;
+
   CanvasElement canvas = querySelector(canvasId) as CanvasElement;
   CanvasRenderingContext2D ctx = canvas.context2D;
-  drawer?.draw(ctx);
+
+  var imageData = ctx.createImageData(wallpaper.width, wallpaper.height);
+  imageData.data.setRange(0, imageData.data.length, image.toUint8List());
+  ctx.putImageData(imageData, 0, 0);
 }
 
 String getJsonFromTextArea() {
@@ -77,4 +88,10 @@ String getJsonFromTextArea() {
   String jsonString = textArea.value!.trim();
   Map<String, dynamic> jsonData = jsonDecode(jsonString);
   return jsonEncode(jsonData);
+}
+
+Uri getRandomInitialConfiguration()
+{
+  int index = Random.secure().nextInt(numberOfConfigurations) + 1;
+  return Uri.parse("https://lucaffo.github.io/github-wallpapers/static/wallpapers/wallpaper_${index.toString().padLeft(2, '0')}.json");
 }

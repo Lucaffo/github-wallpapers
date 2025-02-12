@@ -1,21 +1,18 @@
 {
-    "version": 0,
-    "wallpaper": {
-      "width": 3440,
-      "height": 1440,
-      "logo": {
-        "type": "logo",
-        "name": "logo",
-        "size": 0.6,
-        "position": {
-          "x": 0.5,
-          "y": 0.4
-        },
-        "color": "#FF"
-      },
-      "background": {
-        "color": "#888888",
-        "name": "earth"
-      }
-    }
-  }
+  "width": 3440,
+  "height": 1440,
+  "logo": [{
+    "type": "logo",
+    "name": "logo",
+    "size": 0.6,
+    "position": {
+      "x": 0.5,
+      "y": 0.4
+    },
+    "color": "#FF"
+  }],
+  "background": {
+    "color": "#888888",
+    "name": "earth"
+  } 
+}

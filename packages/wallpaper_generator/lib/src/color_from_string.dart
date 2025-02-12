@@ -1,7 +1,9 @@
 import 'package:image/image.dart';
 
 extension ColorFromString on Color {
-  static Color fromString(String colorStr) {
+  static Color fromString(String? colorStr) {
+    if(colorStr == null) return ColorInt8.rgba(0, 0, 0, 1);
+
     RegExp hexColorRegex = RegExp(r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
 
     if (colorStr.startsWith("rgba")) {

@@ -16,7 +16,7 @@ class HTTPWallpaperFactory extends WallpaperFactory<Uri> {
   }
 
   // Get a wallpaper from a json string
-  Future<Wallpaper?> _getWallpaper(String jsonContent)
+  static Future<Wallpaper?> _getWallpaper(String jsonContent)
   {
     try{
       return Future.value(Wallpaper.fromRawJson(jsonContent)); 
