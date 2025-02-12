@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 *  Luca Raffo @ 12/02/2025
 */
 class PathCollection {
+
   final String _jsonPath;
   final String _name;
   final List<PathUrl> _urls = [];

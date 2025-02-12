@@ -10,15 +10,15 @@ import 'wallpaper_logo.dart';
 */ 
 class Wallpaper {
     
-    int? width;
-    int? height;
-    WallpaperLogo? logo;
+    int width;
+    int height;
+    List<WallpaperLogo>? logos;
     WallpaperBackground? background;
 
     Wallpaper({
-        this.width,
-        this.height,
-        this.logo,
+        required this.width,
+        required this.height,
+        this.logos = const[],
         this.background,
     });
 
@@ -26,17 +26,17 @@ class Wallpaper {
     
     String toRawJson() => json.encode(toJson());
 
-    factory Wallpaper.fromJson(Map<String, dynamic> json) => Wallpaper(
-        width: json["width"],
-        height: json["height"],
-        logo: json["logo"] == null ? null : WallpaperLogo.fromJson(json["logo"]),
-        background: json["background"] == null ? null : WallpaperBackground.fromJson(json["background"]),
+    factory Wallpaper.fromJson(Map<String, dynamic> jsonContent) => Wallpaper(
+        width: jsonContent["width"],
+        height: jsonContent["height"],
+        logos: jsonContent["logos"] == null ? null : List<WallpaperLogo>.from(jsonContent["logos"]!.map((x) => WallpaperLogo.fromJson(x))),
+        background: jsonContent["background"] == null ? null : WallpaperBackground.fromJson(jsonContent["background"]),
     );
 
     Map<String, dynamic> toJson() => {
         "width": width,
         "height": height,
-        "logo": logo?.toJson(),
+        "logos": logos == null ? [] : List<dynamic>.from(logos!.map((x) => x.toJson())),
         "background": background?.toJson(),
     };
 }
