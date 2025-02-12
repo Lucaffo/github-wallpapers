@@ -1,7 +1,7 @@
 {
    "width": 1280,
    "height": 2220,    
-   "logo": [{
+   "logos": [{
       "type": "octocat",      
       "name": "monariveterto",
       "size": 0.25,      

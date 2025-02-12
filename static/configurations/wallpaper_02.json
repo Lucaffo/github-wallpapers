@@ -1,7 +1,7 @@
 {
   "width": 1920,
   "height": 1080,
-  "logo": [{
+  "logos": [{
     "type": "logo",
     "name": "invertocat",
     "size": 0.5,

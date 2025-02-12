@@ -1,7 +1,7 @@
 {
   "width": 1280,
   "height": 2140,
-  "logo": [{
+  "logos": [{
     "type": "octocat",
     "name": "manufactureto",
     "size": 0.2,
