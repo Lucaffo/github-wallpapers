@@ -1,7 +1,7 @@
 {
   "width": 3440,
   "height": 1440,
-  "logo": [{
+  "logos": [{
     "type": "logo",
     "name": "logo",
     "size": 0.6,
