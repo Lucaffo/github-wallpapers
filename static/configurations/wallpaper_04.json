@@ -12,7 +12,7 @@
     "color": "rgba(200, 180, 255, 1)"
   }],
   "background": {
-    "color": "#888888",
+    "color": "rgba(136, 136, 136, 1)",
     "name": "space"
   }
 }

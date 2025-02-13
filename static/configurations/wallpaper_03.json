@@ -12,7 +12,7 @@
     "color": "rgba(255, 255, 255, 0.95)"
   }],
   "background": {
-    "color": "rgb(200, 200, 170)",
+    "color": "rgba(200, 200, 170, 1)",
     "src": null
   }
 }

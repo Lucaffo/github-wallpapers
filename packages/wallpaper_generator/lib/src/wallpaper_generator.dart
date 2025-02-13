@@ -13,6 +13,11 @@ class WallpaperGenerator {
 
   static Future<Image?> generateWallpaper(Wallpaper wallpaper) async {
 
+    // Make sure to load all the urls
+    await logos.readAllUrls();
+    await octocats.readAllUrls(); 
+    await backgrounds.readAllUrls();
+
     // Generate the image
     int wallpaperWidth = wallpaper.width;
     int wallpaperHeight = wallpaper.height;
@@ -21,8 +26,8 @@ class WallpaperGenerator {
     // Evaluate the background
     WallpaperBackground? wallpaperBackground = wallpaper.background;
     if (wallpaperBackground != null) {
-      finalImage.backgroundColor = ColorFromString.fromString(wallpaperBackground.color);
 
+      finalImage = fill(finalImage, color: ColorFromString.fromString(wallpaperBackground.color));
       String? src = wallpaperBackground.src;
       String? name = wallpaperBackground.name;
 
@@ -47,7 +52,7 @@ class WallpaperGenerator {
         
       print("Background image dimensions: ${finalImage.width}x${finalImage.height}");
     }
-
+    
     // Evaluate the logos
     List<WallpaperLogo>? wallpaperLogos = wallpaper.logos;
     print("Number of logos: ${wallpaperLogos?.length}");
@@ -71,8 +76,17 @@ class WallpaperGenerator {
         if(src != null && src.isNotEmpty) {
           final http.Response res = await http.get(Uri.parse(src));
           if(res.statusCode == 200) {
+
+            // Decode the image from the bytes
             Image? logoSrcImage = decodeImage(res.bodyBytes);
             if (logoSrcImage == null) continue;
+            
+            // Clone the src, and apply a fill multiplication only when alpha is positivie
+            Color color = ColorFromString.fromString(wallpaperLogo.color);
+            Image blendImage = fill(logoSrcImage.clone(), color: color, mask: logoSrcImage, maskChannel: Channel.alpha);
+            
+            // Blend the images
+            logoSrcImage = compositeImage(logoSrcImage, blendImage, blend: BlendMode.direct, linearBlend: true);
             
             int logoWidth = (logoSrcImage.width * size).toInt();
             int logoHeight = (logoSrcImage.height * size).toInt();
@@ -83,9 +97,6 @@ class WallpaperGenerator {
             double centerX = ((wallpaperWidth * logoPosX) - logoWidth / 2);
             double centerY = ((wallpaperHeight * logoPosY) - logoHeight / 2);
 
-            print("Logo image dimensions: ${logoSrcImage.width}x${logoSrcImage.height}");
-            print("Logo position: (${centerX.toInt()}, ${centerY.toInt()})");
-            print("Logo size: ${logoWidth}x${logoHeight}");
             finalImage = compositeImage(
               finalImage,
               logoSrcImage, 
