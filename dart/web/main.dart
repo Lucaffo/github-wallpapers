@@ -76,10 +76,20 @@ Future updateCanvas(Wallpaper? wallpaper) async {
   if (image == null) return;
 
   CanvasElement canvas = querySelector(canvasId) as CanvasElement;
+  canvas.width = image.width;
+  canvas.height = image.height;
   CanvasRenderingContext2D ctx = canvas.context2D;
 
-  var imageData = ctx.createImageData(wallpaper.width, wallpaper.height);
-  imageData.data.setRange(0, imageData.data.length, image.toUint8List());
+  var imageData = ctx.createImageData(image.width, image.height);
+  var imageBytes = image.getBytes();
+
+  print("Canvas dimensions: ${canvas.width}x${canvas.height}");
+  print("Image dimensions: ${image.width}x${image.height}");
+  print("imageData.data.length: ${imageData.data.length}");
+  print("imageBytes.length: ${imageBytes.length}");
+  print("Final image dimensions: ${imageData.width}x${imageData.height}");
+  
+  imageData.data.setRange(0, imageData.data.length, imageBytes);
   ctx.putImageData(imageData, 0, 0);
 }
 

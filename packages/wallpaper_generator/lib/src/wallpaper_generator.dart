@@ -16,58 +16,53 @@ class WallpaperGenerator {
     // Generate the image
     int wallpaperWidth = wallpaper.width;
     int wallpaperHeight = wallpaper.height;
-    Image finalImage = Image(width: wallpaperWidth, height: wallpaperHeight);
+    Image finalImage = Image(width: wallpaperWidth, height: wallpaperHeight, numChannels: 4);
 
     // Evaluate the background
     WallpaperBackground? wallpaperBackground = wallpaper.background;
-    if (wallpaperBackground != null)
-    {
-        Image backgroundImage = Image(width: wallpaper.width, height: wallpaper.height);
-        backgroundImage.backgroundColor = ColorFromString.fromString(wallpaperBackground.color);
+    if (wallpaperBackground != null) {
+      finalImage.backgroundColor = ColorFromString.fromString(wallpaperBackground.color);
 
-        String? src = wallpaperBackground.src;
-        String? name = wallpaperBackground.name;
+      String? src = wallpaperBackground.src;
+      String? name = wallpaperBackground.name;
 
-        // Inject the src from name
-        if(name != null && name.isNotEmpty)
-        {
-          PathUrl? backgroundSrc = backgrounds.search(name);
-          if(backgroundSrc != null)
-          {
-             src = backgroundSrc.getFullPath();
+      // Inject the src from name
+      if(name != null && name.isNotEmpty) {
+        PathUrl? backgroundSrc = backgrounds.search(name);
+        if(backgroundSrc != null) {
+            src = backgroundSrc.getFullPath();
+        }
+      }
+
+      // If src is not null, try downloading the image.
+      if(src != null && src.isNotEmpty) {
+        final http.Response res = await http.get(Uri.parse(src));
+        if(res.statusCode == 200) {
+          Image? backgroundSrcImage = decodeImage(res.bodyBytes);
+          if (backgroundSrcImage != null){
+            finalImage = compositeImage(finalImage, backgroundSrcImage);
           }
         }
-
-        // If src is not null, try downloading the image.
-        if(src != null && src.isNotEmpty) {
-          final http.Response res = await http.get(Uri.parse(src));
-          if(res.statusCode == 200)
-          {
-            Image? backgroundSrcImage = decodeImage(res.bodyBytes);
-            compositeImage(backgroundImage, backgroundSrcImage!);
-          }
-        }
-
-        finalImage = compositeImage(backgroundImage, finalImage);
+      }
+        
+      print("Background image dimensions: ${finalImage.width}x${finalImage.height}");
     }
 
     // Evaluate the logos
     List<WallpaperLogo>? wallpaperLogos = wallpaper.logos;
-    if (wallpaperLogos != null)
-    {
-      for (WallpaperLogo wallpaperLogo in wallpaperLogos)
-      {
+    print("Number of logos: ${wallpaperLogos?.length}");
+    if (wallpaperLogos != null) {
+      for (WallpaperLogo wallpaperLogo in wallpaperLogos) {
+        print("Processing logo: ${wallpaperLogo.name}");
         String? src;
         String? name = wallpaperLogo.name;
         double size = wallpaperLogo.size;
         WallpaperLogoPosition? position = wallpaperLogo.position;
 
         // Inject the src from name
-        if(name != null && name.isNotEmpty)
-        {
+        if(name != null && name.isNotEmpty) {
           PathUrl? logoSrc = logos.search(name);
-          if(logoSrc != null)
-          {
+          if(logoSrc != null) {
              src = logoSrc.getFullPath();
           }
         }
@@ -75,8 +70,7 @@ class WallpaperGenerator {
         // If src is not null, try downloading the image.
         if(src != null && src.isNotEmpty) {
           final http.Response res = await http.get(Uri.parse(src));
-          if(res.statusCode == 200)
-          {
+          if(res.statusCode == 200) {
             Image? logoSrcImage = decodeImage(res.bodyBytes);
             if (logoSrcImage == null) continue;
             
@@ -89,6 +83,9 @@ class WallpaperGenerator {
             double centerX = ((wallpaperWidth * logoPosX) - logoWidth / 2);
             double centerY = ((wallpaperHeight * logoPosY) - logoHeight / 2);
 
+            print("Logo image dimensions: ${logoSrcImage.width}x${logoSrcImage.height}");
+            print("Logo position: (${centerX.toInt()}, ${centerY.toInt()})");
+            print("Logo size: ${logoWidth}x${logoHeight}");
             finalImage = compositeImage(
               finalImage,
               logoSrcImage, 

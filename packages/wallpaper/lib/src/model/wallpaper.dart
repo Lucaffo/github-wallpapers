@@ -18,7 +18,7 @@ class Wallpaper {
     Wallpaper({
         required this.width,
         required this.height,
-        this.logos = const[],
+        this.logos,
         this.background,
     });
 
@@ -29,14 +29,14 @@ class Wallpaper {
     factory Wallpaper.fromJson(Map<String, dynamic> jsonContent) => Wallpaper(
         width: jsonContent["width"],
         height: jsonContent["height"],
-        logos: jsonContent["logos"] == null ? null : List<WallpaperLogo>.from(jsonContent["logos"]!.map((x) => WallpaperLogo.fromJson(x))),
+        logos: jsonContent["logos"] != null ? (jsonContent["logos"] as List).map((i) => WallpaperLogo.fromJson(i)).toList() : null,
         background: jsonContent["background"] == null ? null : WallpaperBackground.fromJson(jsonContent["background"]),
     );
 
     Map<String, dynamic> toJson() => {
         "width": width,
         "height": height,
-        "logos": logos == null ? [] : List<dynamic>.from(logos!.map((x) => x.toJson())),
+        "logos": logos?.map((i) => i.toJson()).toList(),
         "background": background?.toJson(),
     };
 }
