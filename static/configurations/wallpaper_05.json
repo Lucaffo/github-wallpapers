@@ -12,7 +12,7 @@
     "color": "rgba(150, 150, 150, 0.8)"
   }],
   "background": {
-    "color": "#888888",
+    "color": "rgba(136, 136, 136, 1)",
     "src": null,
     "name": "japan"
   }

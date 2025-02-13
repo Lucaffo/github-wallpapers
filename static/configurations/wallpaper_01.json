@@ -9,10 +9,10 @@
       "x": 0.5,
       "y": 0.5
     },
-    "color": "#CCCCCC"
+    "color": "rgba(204, 204, 204, 1)"
   }],
   "background": {
-    "color": "#CCCCCC",
+    "color": "rgba(204, 204, 204, 1)",
     "src": null
   }
 }
