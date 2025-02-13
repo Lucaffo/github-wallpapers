@@ -60,15 +60,27 @@ class WallpaperGenerator {
       for (WallpaperLogo wallpaperLogo in wallpaperLogos) {
         print("Processing logo: ${wallpaperLogo.name}");
         String? src;
+        String? type = wallpaperLogo.type;
         String? name = wallpaperLogo.name;
         double size = wallpaperLogo.size;
         WallpaperLogoPosition? position = wallpaperLogo.position;
 
         // Inject the src from name
-        if(name != null && name.isNotEmpty) {
-          PathUrl? logoSrc = logos.search(name);
-          if(logoSrc != null) {
-             src = logoSrc.getFullPath();
+        if(name != null && name.isNotEmpty && type != null && type.isNotEmpty) {
+          switch(type)
+          {
+            case "octocat":
+              PathUrl? octocatSrc = octocats.search(name);
+              if(octocatSrc != null) {
+                src = octocatSrc.getFullPath();
+              }
+              break;
+            case "logo":
+              PathUrl? logoSrc = logos.search(name);
+              if(logoSrc != null) {
+                src = logoSrc.getFullPath();
+              }
+              break;
           }
         }
 

@@ -48,6 +48,7 @@ jobs:
           cp dart/web/index.html site/
           cp dart/web/main.js site/
           cp dart/web/styles.css site/
+          cp dart/web/loader.css site/
           cp -r static/favicons/. site/static/favicons
           cp -r static/logos/. site/static/logos/
           cp -r static/octocats/. site/static/octocats/
