@@ -11,7 +11,6 @@ class WallpaperLogo
 {
     String? type;
     String? name;
-    String? blend;
     double size;
     WallpaperLogoPosition? position;
     String? color;
@@ -19,7 +18,6 @@ class WallpaperLogo
     WallpaperLogo({
         this.type,
         this.name,
-        this.blend,
         this.size = 1,
         this.position,
         this.color,
@@ -30,7 +28,6 @@ class WallpaperLogo
     factory WallpaperLogo.fromJson(Map<String, dynamic> json) => WallpaperLogo (
         type: json["type"],
         name: json["name"],
-        blend: json["blend"],
         size: json["size"]?.toDouble(),
         position: json["position"] == null ? null : WallpaperLogoPosition.fromJson(json["position"]),
         color: json["color"],
@@ -41,7 +38,6 @@ class WallpaperLogo
     Map<String, dynamic> toJson() => {
         "type": type,
         "name": name,
-        "blend" : blend,
         "size": size,
         "position": position?.toJson(),
         "color": color,

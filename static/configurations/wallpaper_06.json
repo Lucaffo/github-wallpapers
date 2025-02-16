@@ -1,17 +1,19 @@
 {
    "width": 1280,
-   "height": 2220,    
-   "logos": [{
-      "type": "octocat",      
-      "name": "monariveterto",
-      "size": 0.25,      
-      "position": {
-         "x": 0.48, 
+   "height": 2220,
+   "logos": [
+     {
+       "type": "octocat",
+       "name": "monariveterto",
+       "size": 0.25,
+       "position": {
+         "x": 0.48,
          "y": 0.48
-      },  
-      "color": "rgba(255, 255, 255, 1)"
-   }], 
+       },
+       "color": "rgba(255, 255, 255, 1)"
+     }
+   ],
    "background": {
-      "color": "rgba(65, 35, 180, 0.2)"
-   }  
-}
+     "color": "rgba(65, 35, 140, 1)"
+   }
+ }

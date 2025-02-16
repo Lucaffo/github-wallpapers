@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:convert';
 import 'path_url.dart';
-import 'package:http/http.dart' as http;
+import 'dart:html';
 
 /*
 *  Path Collection class.
@@ -27,10 +27,9 @@ class PathCollection {
 
   // From a json path, read and populate all the urls
   Future _readFromUrl(String jsonPath) async {
-    Uri uri = Uri.parse(jsonPath);
-    final http.Response res = await http.get(uri);
-    if (res.statusCode == 200) {
-      _populateUrlsFromJson(res.body);
+    final HttpRequest res = await HttpRequest.request(jsonPath);
+    if (res.status == 200) {
+      _populateUrlsFromJson(res.response);
     }
   }
 

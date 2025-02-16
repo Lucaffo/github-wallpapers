@@ -1,16 +1,18 @@
 {
   "width": 5120,
   "height": 2160,
-  "logos": [{
-    "type": "logo",
-    "name": "invertocat",
-    "size": 0.6,
-    "position": {
-      "x": 0.5,
-      "y": 0.5
-    },
-    "color": "rgba(150, 150, 150, 0.8)"
-  }],
+  "logos": [
+    {
+      "type": "logo",
+      "name": "invertocat",
+      "size": 0.6,
+      "position": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "color": "rgba(150, 150, 150, 0.8)"
+    }
+  ],
   "background": {
     "color": "rgba(136, 136, 136, 1)",
     "src": null,

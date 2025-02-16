@@ -1,49 +1,40 @@
-import 'dart:async';
-import 'dart:html';
 import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
+import 'dart:html';
+import 'dart:async';
 
 import 'package:wallpaper/wallpaper.dart';
-import 'package:wallpaper_generator/wallpaper_generator.dart';
 
-import 'package:image/image.dart' as img;
-import 'package:worker_manager/worker_manager.dart';
-
-const String canvasId = "#output";
-const String textAreaId = "#input";
-const String saveBtnId = "#save-btn";
-const String loadingId = "#loading";
-
-const int numberOfConfigurations = 7;
-
-Cancelable? cancelable;
-Timer? _debounceTimer;
-
-final CanvasElement canvas = querySelector(canvasId) as CanvasElement;
+final CanvasElement canvas = querySelector("#output") as CanvasElement;
 final OffscreenCanvas offscreenCanvas = canvas.transferControlToOffscreen();
 final OffscreenCanvasRenderingContext2D offCtx = offscreenCanvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
-final TextAreaElement textArea = querySelector(textAreaId) as TextAreaElement;
-final DivElement loading = querySelector(loadingId) as DivElement;
-final ButtonElement saveBtn = querySelector(saveBtnId) as ButtonElement;
+
+final TextAreaElement textArea = document.querySelector("#input") as TextAreaElement;
+final ButtonElement saveBtn = document.querySelector("#save-btn") as ButtonElement;
+final DivElement loading = document.querySelector("#loading-panel") as DivElement;
+
+const int numberOfConfigurations = 7;
+Timer? _debounceTimer;
+
+final String workerName = "wallpaper_generator_worker.js";
+Worker? worker;
 
 void main() async {
 
   // Set first wallpaper
-  setFirstWallpaper();
+  await setFirstWallpaper();
 
   // Bind the UI
   bindUI();
 }
 
-void setFirstWallpaper() async {
+Future setFirstWallpaper() async {
   HTTPWallpaperFactory httpWallpaperFactory = HTTPWallpaperFactory();
   Wallpaper? wallpaper = await httpWallpaperFactory.getWallpaper(getRandomInitialConfiguration());
   setWallpaper(wallpaper);
 }
 
 void bindUI() {
-  textArea.onChange.listen((_) => debounceUpdateWallpaper());
   textArea.onInput.listen((_) => debounceUpdateWallpaper());
   saveBtn.onClick.listen((_) => saveImage());
 }
@@ -61,10 +52,10 @@ void saveImage() {
 
 void debounceUpdateWallpaper() {
   _debounceTimer?.cancel();
-  _debounceTimer = Timer(Duration(milliseconds: 500), () => updateWallpaper());
+  _debounceTimer = Timer(Duration(milliseconds: 1500), () => updateWallpaper());
 }
 
-void updateWallpaper() async {
+void updateWallpaper() {
   print("Wallpaper Update");
   String compactJson = getJsonFromTextArea();
   Wallpaper? wallpaper = Wallpaper.fromRawJson(compactJson);
@@ -86,24 +77,25 @@ void setJsonInTextArea(String? jsonString) {
   textArea.text = prettyprint;
 }
 
-void updateCanvas(Wallpaper? wallpaper) async {
+// Stop the current worker and start another one
+void updateCanvas(Wallpaper? wallpaper) {
   if (wallpaper == null) return;
+  loading.style.visibility = "visible";
+  worker?.terminate();
+  worker = Worker(workerName);
+  worker?.onMessage.listen((MessageEvent event) {
 
-  loading.style.display = "block";
-  
-  offscreenCanvas.width = wallpaper.width;
-  offscreenCanvas.height = wallpaper.height;
-
-  await workerManager.execute(() async {
-      img.Image? image = await WallpaperGenerator.generateWallpaper(wallpaper);
-      if (image == null) return;
-      final Uint8List imageBytes = image.getBytes();
-      final ImageData imageData = offCtx.createImageData(image.width, image.height);
-      imageData.data.setAll(0, imageBytes);
+    if (event.data is Map && event.data.containsKey('wallpaperBytes')) {
+      offscreenCanvas.width = wallpaper.width;
+      offscreenCanvas.height = wallpaper.height;
+      ImageData imageData = offCtx.createImageData(wallpaper.width, wallpaper.height);
+      imageData.data.setAll(0, event.data['wallpaperBytes']);
       offCtx.putImageData(imageData, 0, 0);
-  });
+    }
 
-  loading.style.display = "none";
+    loading.style.visibility = "hidden";
+  });
+  worker?.postMessage({'wallpaper' : wallpaper.toJson()});
 }
 
 String getJsonFromTextArea() {

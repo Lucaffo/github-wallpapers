@@ -1,9 +1,10 @@
 import 'package:image/image.dart';
-import 'package:http/http.dart' as http;
 import 'package:wallpaper/wallpaper.dart';
 import 'package:wallpaper_generator/src/color_from_string.dart';
 import 'package:paths_collection/src/path_collection.dart';
 import 'package:paths_collection/src/path_url.dart';
+import 'dart:html';
+import 'dart:typed_data';
 
 class WallpaperGenerator {
 
@@ -27,7 +28,8 @@ class WallpaperGenerator {
     WallpaperBackground? wallpaperBackground = wallpaper.background;
     if (wallpaperBackground != null) {
 
-      finalImage = fill(finalImage, color: ColorFromString.fromString(wallpaperBackground.color));
+      Color backgroundColor = ColorFromString.fromString(wallpaperBackground.color);
+      finalImage = fill(finalImage, color: backgroundColor);
       String? src = wallpaperBackground.src;
       String? name = wallpaperBackground.name;
 
@@ -41,10 +43,14 @@ class WallpaperGenerator {
 
       // If src is not null, try downloading the image.
       if(src != null && src.isNotEmpty) {
-        final http.Response res = await http.get(Uri.parse(src));
-        if(res.statusCode == 200) {
-          Image? backgroundSrcImage = decodeImage(res.bodyBytes);
+        final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
+        if (res.status == 200) {
+          // Convert the response into array of bytes
+          Uint8List imageBytes = Uint8List.view((res.response as ByteBuffer));
+          Image? backgroundSrcImage = decodeImage(imageBytes);
           if (backgroundSrcImage != null){
+            finalImage.clear(ColorFromString.fromString(null)); // Apply default background color
+            backgroundSrcImage = scaleRgba(backgroundSrcImage, scale: backgroundColor);
             finalImage = compositeImage(finalImage, backgroundSrcImage);
           }
         }
@@ -86,20 +92,19 @@ class WallpaperGenerator {
 
         // If src is not null, try downloading the image.
         if(src != null && src.isNotEmpty) {
-          final http.Response res = await http.get(Uri.parse(src));
-          if(res.statusCode == 200) {
+          final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
+          if(res.status == 200) {
 
             // Decode the image from the bytes
-            Image? logoSrcImage = decodeImage(res.bodyBytes);
+            Uint8List imageBytes = Uint8List.view((res.response as ByteBuffer));
+            Image? logoSrcImage = decodeImage(imageBytes);
             if (logoSrcImage == null) continue;
             
-            // Clone the src, and apply a fill multiplication only when alpha is positivie
+            // Apply the color by multiplication
             Color color = ColorFromString.fromString(wallpaperLogo.color);
-            Image blendImage = fill(logoSrcImage.clone(), color: color, mask: logoSrcImage, maskChannel: Channel.alpha);
-            
-            // Blend the images
-            logoSrcImage = compositeImage(logoSrcImage, blendImage, blend: BlendMode.direct, linearBlend: true);
-            
+            logoSrcImage = scaleRgba(logoSrcImage, scale: color, mask: logoSrcImage, maskChannel: Channel.alpha);
+
+            // Calculate the final logo position
             int logoWidth = (logoSrcImage.width * size).toInt();
             int logoHeight = (logoSrcImage.height * size).toInt();
 
@@ -109,6 +114,7 @@ class WallpaperGenerator {
             double centerX = ((wallpaperWidth * logoPosX) - logoWidth / 2);
             double centerY = ((wallpaperHeight * logoPosY) - logoHeight / 2);
 
+            // Apply the logo into the final image
             finalImage = compositeImage(
               finalImage,
               logoSrcImage, 

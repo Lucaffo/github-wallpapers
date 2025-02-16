@@ -3,9 +3,8 @@
   "height": 1080,
   "logos": [
     {
-      "type": "logos",
+      "type": "logo",
       "name": "invertocat",
-      "blend": null,
       "size": 0.5,
       "position": {
         "x": 0.5,
@@ -14,9 +13,8 @@
       "color": "rgba(255, 255, 255, 1)"
     },
     {
-      "type": "logos",
+      "type": "logo",
       "name": "github_logo",
-      "blend": null,
       "size": 0.5,
       "position": {
         "x": 0.5,
@@ -26,8 +24,6 @@
     }
   ],
   "background": {
-    "color": "rgba(0, 0, 0, 1)",
-    "name": null,
-    "src": null
+    "color": "rgba(0, 0, 0, 1)"
   }
 }

@@ -7,7 +7,7 @@
         {
             "name": "dart",
             "cwd": "dart",
-            "preLaunchTask": "Compile Dart to JS",
+            "preLaunchTask": "Build Project",
             "request": "launch",
             "type": "dart",
             "program": "${workspaceFolder}/dart/web/main.dart"

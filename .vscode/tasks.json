@@ -2,6 +2,15 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Build Project",
+            "dependsOn": [
+                "Dart Pub Get",
+                "Dart Pub Upgrade",
+                "Compile WallpaperGeneratorWorker",
+                "Compile Main"
+            ]
+        },
+        {
             "label": "Dart Pub Get",
             "type": "shell",
             "command": "dart",
@@ -38,12 +47,32 @@
             }
         },
         {
-            "label": "Compile Dart to JS",
+            "label": "Compile WallpaperGeneratorWorker",
             "type": "shell",
             "command": "dart",
             "args": [
                 "compile",
                 "js",
+                "-O1",
+                "${workspaceFolder}/dart/web/wallpaper_generator_worker.dart",
+                "-o",
+                "${workspaceFolder}/dart/web/wallpaper_generator_worker.js"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            }
+        },
+        {
+            "label": "Compile Main",
+            "type": "shell",
+            "command": "dart",
+            "args": [
+                "compile",
+                "js",
+                "-O1",
                 "${workspaceFolder}/dart/web/main.dart",
                 "-o",
                 "${workspaceFolder}/dart/web/main.js"
@@ -53,11 +82,7 @@
                 "panel": "shared",
                 "showReuseMessage": true,
                 "clear": true
-            },
-            "dependsOn": [
-                "Dart Pub Get",
-                "Dart Pub Upgrade"
-            ]
+            }
         },
         {
             "label" : "Create Dart Package",

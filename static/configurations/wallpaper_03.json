@@ -1,18 +1,19 @@
 {
   "width": 1280,
   "height": 2140,
-  "logos": [{
-    "type": "octocat",
-    "name": "manufactureto",
-    "size": 0.2,
-    "position": {
-      "x": 0.5,
-      "y": 0.48
-    },
-    "color": "rgba(255, 255, 255, 0.95)"
-  }],
+  "logos": [
+    {
+      "type": "octocat",
+      "name": "manufactureto",
+      "size": 0.2,
+      "position": {
+        "x": 0.5,
+        "y": 0.48
+      },
+      "color": "rgba(255, 255, 255, 0.95)"
+    }
+  ],
   "background": {
-    "color": "rgba(200, 200, 170, 1)",
-    "src": null
+    "color": "rgba(200, 200, 170, 1)"
   }
 }
