@@ -69,7 +69,7 @@ class WallpaperGenerator {
           updatingFunction("Working on background... convert the image...");
           Uint8List imageBytes = Uint8List.view(resCache);
           updatingFunction("Working on background... decoding the image...");
-          Image? backgroundSrcImage = decodeImage(imageBytes);
+          Image? backgroundSrcImage = decodeNamedImage(src, imageBytes);
           if (backgroundSrcImage != null){
             finalImage.clear(ColorFromString.fromString(null)); // Apply default background color
             updatingFunction("Working on background... apply recoloring...");
@@ -133,7 +133,7 @@ class WallpaperGenerator {
             updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... convert the image...");
             Uint8List imageBytes = Uint8List.view(resCache);
             updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... decode the image...");
-            Image? logoSrcImage = decodeImage(imageBytes);
+            Image? logoSrcImage = decodeNamedImage(src, imageBytes);
             if (logoSrcImage == null) continue;
             
             // Apply the color by multiplication
