@@ -14,12 +14,11 @@ import 'package:worker_database/worker_database.dart';
 class PathCollection {
 
   final String _jsonPath;
-  final String _name;
   final List<PathUrl> _urls = [];
   
   static final WorkerDatabase pathDB = WorkerDatabase<String, String>("PathsDB", "PathsStore");
 
-  PathCollection(this._name, this._jsonPath);
+  PathCollection(this._jsonPath);
 
   // Read all the urls from a json path
   // Write all the results into the @urls
@@ -54,7 +53,7 @@ class PathCollection {
 
     if (paths != null) {
       _urls.clear();
-      paths.forEach((v) => {print(v), _urls.add(PathUrl(v))});
+      paths.forEach((v) => {_urls.add(PathUrl(v))});
     }
   }
 

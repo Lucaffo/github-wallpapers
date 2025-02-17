@@ -10,9 +10,9 @@ import 'package:worker_database/worker_database.dart';
 
 class WallpaperGenerator {
 
-  static final PathCollection logos = PathCollection("logos", "https://lucaffo.github.io/github-wallpapers/static/logos/paths.json");
-  static final PathCollection octocats = PathCollection("octocats", "https://lucaffo.github.io/github-wallpapers/static/octocats/paths.json");
-  static final PathCollection backgrounds = PathCollection("backgrounds", "https://lucaffo.github.io/github-wallpapers/static/backgrounds/paths.json");
+  static final PathCollection logos = PathCollection("https://lucaffo.github.io/github-wallpapers/static/logos/paths.json");
+  static final PathCollection octocats = PathCollection("https://lucaffo.github.io/github-wallpapers/static/octocats/paths.json");
+  static final PathCollection backgrounds = PathCollection("https://lucaffo.github.io/github-wallpapers/static/backgrounds/paths.json");
 
   static Future<Uint8List?> generateWallpaper(Wallpaper wallpaper) async {
 
