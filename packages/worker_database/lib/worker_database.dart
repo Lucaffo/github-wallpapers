@@ -57,7 +57,7 @@ class WorkerDatabase<T, K> {
     try {
       await os.put(data, key);
       await tx.completed;
-      print("Cached $data");
+      print("Cached $key");
     } catch (e) {
       print("Put Error: $e");
     }

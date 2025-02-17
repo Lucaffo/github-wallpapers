@@ -1,12 +1,15 @@
 name: paths_collection
 description: file path collection management
 version: 1.0.0
+publish_to: none
 
 environment:
   sdk: ^3.6.1
 
 dependencies:
   http: ^1.3.0
+  worker_database:
+    path: ../worker_database
 
 dev_dependencies:
   lints: ^5.0.0

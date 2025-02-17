@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'path_url.dart';
 import 'dart:html';
 
+import 'package:worker_database/worker_database.dart';
+
 /*
 *  Path Collection class.
 *  Manage a collection of Path Url.
@@ -14,22 +16,33 @@ class PathCollection {
   final String _jsonPath;
   final String _name;
   final List<PathUrl> _urls = [];
-  bool _loaded = false;
+  
+  static final WorkerDatabase pathDB = WorkerDatabase<String, String>("PathsDB", "PathsStore");
 
   PathCollection(this._name, this._jsonPath);
 
   // Read all the urls from a json path
   // Write all the results into the @urls
   Future readAllUrls() async {
-    if (_loaded) return;
     await _readFromUrl(_jsonPath);
   }
 
   // From a json path, read and populate all the urls
   Future _readFromUrl(String jsonPath) async {
-    final HttpRequest res = await HttpRequest.request(jsonPath);
-    if (res.status == 200) {
-      _populateUrlsFromJson(res.response);
+    
+    // Try to fetch the json from the pathDB cache, else do an http request
+    String? resCache = await pathDB.tryFetch(jsonPath);
+    if(resCache == null){
+      final HttpRequest res = await HttpRequest.request(jsonPath);
+      if (res.status == 200) {
+        resCache = res.response;
+        await pathDB.tryPut(jsonPath, resCache);
+      }
+    }
+
+    // Populat the urls from the json
+    if(resCache != null){
+      _populateUrlsFromJson(resCache);
     }
   }
 
@@ -38,13 +51,10 @@ class PathCollection {
     final Map<String, dynamic> map = json.decode(jsonContent);
 
     var paths = map["paths"];
-    print(paths);
 
     if (paths != null) {
       _urls.clear();
       paths.forEach((v) => {print(v), _urls.add(PathUrl(v))});
-      _loaded = true;
-      print("Added all the urls to $_name");
     }
   }
 
@@ -78,7 +88,4 @@ class PathCollection {
 
     return null;
   }
-
-  // Check if it's loaded one time
-  bool isLoaded() => _loaded;
 }
