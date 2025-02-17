@@ -23,7 +23,7 @@ jobs:
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: stable
+          sdk: 3.6.2
 
       - name: Install Dependencies
         run: |
