@@ -80,8 +80,8 @@ class WorkerDatabase<T, K> {
     _db = await indexedDB.open(dbName, version: 1, onUpgradeNeeded: (e)
     {
       Database db = e.target.result;
-      var os = db.createObjectStore(storeName);
-      print("Store name created! $os");
+      db.createObjectStore(storeName);
+      print("Store name created {$storeName!}");
     });
   }
 }
