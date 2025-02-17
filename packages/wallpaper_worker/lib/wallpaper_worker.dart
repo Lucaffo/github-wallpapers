@@ -7,14 +7,15 @@ import 'dart:html';
 
 import 'package:wallpaper/wallpaper.dart';
 import 'package:wallpaper_generator/wallpaper_generator.dart';
-// import 'package:worker_database/worker_database.dart';
 
 class WallpaperWorker {
+
+  // Message identifier to the main thread
+  static const String deliveryMsg = "wallpaperBytes";
+  static const String updatingMsg = "wallpaperUpdates";
   
   // Initialize the wallpaper worker (Execute this method inside the worker)
   static void initialize(){
-    // Database for already generated wallpaper
-    // WorkerDatabase wdb = WorkerDatabase<ByteBuffer, String>("WallpaperDB", "wallpaperBytesData");
     
     // Get the worker scope
     final DedicatedWorkerGlobalScope workerScope = DedicatedWorkerGlobalScope.instance;
@@ -34,21 +35,11 @@ class WallpaperWorker {
           String wallpaperRawJson = jsonEncode(data['wallpaper']);
           Wallpaper? wallpaper = Wallpaper.fromRawJson(wallpaperRawJson);
 
-          // Fetch already generated if any
-          /*ByteBuffer? resCache = await wdb.tryFetch(wallpaper.toRawJson()); 
-          if(resCache != null){
-            print("Wallpaper Cache Hit from DB, posted to main thread.");
-            Uint8List byteArray = Uint8List.view(resCache);
-            workerScope.postMessage({'wallpaperBytes' : byteArray }, [byteArray.buffer]);
-            return;
-          }*/
-
           // Generate the wallpaper
           Uint8List? res = await generateWallpaper(wallpaper);
           if (res != null) {
             print("Wallpaper Generated, posted to main thread.");
-            // await wdb.tryPut(wallpaper.toRawJson(), res.buffer);
-            workerScope.postMessage({'wallpaperBytes' : res }, [res.buffer]);
+            workerScope.postMessage({deliveryMsg : res }, [res.buffer]);
           } else {
             print("Wallpaper not Generated, something not doing well");
             workerScope.postMessage(null);
@@ -56,6 +47,12 @@ class WallpaperWorker {
         }
       }
     });
+  }
+
+  // Send a message toward the main thread
+  static void sendUpdatingMsgToMain(String message){
+    final DedicatedWorkerGlobalScope workerScope = DedicatedWorkerGlobalScope.instance;
+    workerScope.postMessage({updatingMsg : message});
   }
 
   // Generate the wallpaper into a byte array
@@ -71,7 +68,7 @@ class WallpaperWorker {
     }
 
     // Generate the wallpaper
-    Uint8List? imageBytes = await WallpaperGenerator.generateWallpaper(wallpaper);
+    Uint8List? imageBytes = await WallpaperGenerator.generateWallpaper(wallpaper, sendUpdatingMsgToMain);
     if (imageBytes == null) {
       print("Generated image is null, there it was an error in the wallpaper generation.");
       return null;

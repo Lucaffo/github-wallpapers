@@ -12,6 +12,7 @@ final OffscreenCanvasRenderingContext2D offCtx = offscreenCanvas.getContext('2d'
 final TextAreaElement textArea = document.querySelector("#input") as TextAreaElement;
 final ButtonElement saveBtn = document.querySelector("#save-btn") as ButtonElement;
 final DivElement loading = document.querySelector("#loading-panel") as DivElement;
+final ParagraphElement loadingMessage = document.querySelector("#loading-message") as ParagraphElement;
 
 const int numberOfConfigurations = 7;
 Timer? _debounceTimer;
@@ -84,6 +85,11 @@ void updateCanvas(Wallpaper? wallpaper) {
   worker?.terminate();
   worker = Worker(workerName);
   worker?.onMessage.listen((MessageEvent event) {
+
+    if (event.data is Map && event.data.containsKey('wallpaperUpdates')) {
+      loadingMessage.text = event.data['wallpaperUpdates'];
+      return;
+    }
 
     if (event.data is Map && event.data.containsKey('wallpaperBytes')) {
       offscreenCanvas.width = wallpaper.width;

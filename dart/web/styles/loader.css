@@ -65,12 +65,18 @@
     }
 }
 
-
 .loading-panel {
     position: absolute;
     inset: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #00000055;
+    background: #00000099;
 }
+
+.loading-message {
+    font-family: NotoSansRegular;
+    color: white;
+    position: absolute;
+    margin: 50% auto 20% auto;
+  }
