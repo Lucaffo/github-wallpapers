@@ -1,21 +1,21 @@
 {
-  "width": 5120,
-  "height": 2160,
+  "width": 3440,
+  "height": 1440,
   "logos": [
     {
       "type": "logo",
       "name": "invertocat",
-      "size": 0.6,
+      "size": 0.4,
       "position": {
         "x": 0.5,
         "y": 0.5
       },
-      "color": "rgba(150, 150, 150, 0.8)"
+      "color": "rgba(255, 255, 255, 1)"
     }
   ],
   "background": {
-    "color": "rgba(136, 136, 136, 1)",
-    "src": null,
-    "name": "japan"
+    "color": "rgba(255, 255, 255, 1)",
+    "name": "japan",
+    "src": null
   }
 }
