@@ -86,7 +86,7 @@ class WallpaperGenerator {
     if (wallpaperLogos != null) {
       for (int i = 0; i < wallpaperLogos.length; i++) {
         WallpaperLogo wallpaperLogo = wallpaperLogos[i];
-        updatingFunction("Working on logo [$i/${wallpaperLogos.length}]... setup...");
+        updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... setup...");
         String? src;
         String? type = wallpaperLogo.type;
         String? name = wallpaperLogo.name;
@@ -118,7 +118,7 @@ class WallpaperGenerator {
           // Try to hit the image from cache or get via http
           ByteBuffer? resCache = await imageDB.tryFetch(src);
           if(resCache == null) {  
-            updatingFunction("Working on logo [$i/${wallpaperLogos.length - 1}]... fetching the image...");
+            updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... fetching the image...");
             final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
             if(res.status == 200) {
               resCache = res.response as ByteBuffer;
@@ -130,14 +130,14 @@ class WallpaperGenerator {
           if(resCache != null) {
 
             // Decode the image from the bytes
-            updatingFunction("Working on logo [$i/${wallpaperLogos.length - 1}]... convert the image...");
+            updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... convert the image...");
             Uint8List imageBytes = Uint8List.view(resCache);
-            updatingFunction("Working on logo [$i/${wallpaperLogos.length - 1}]... decode the image...");
+            updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... decode the image...");
             Image? logoSrcImage = decodeImage(imageBytes);
             if (logoSrcImage == null) continue;
             
             // Apply the color by multiplication
-            updatingFunction("Working on logo [$i/${wallpaperLogos.length - 1}]... apply recoloring...");
+            updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... apply recoloring...");
             Color color = ColorFromString.fromString(wallpaperLogo.color);
             logoSrcImage = scaleRgba(logoSrcImage, scale: color, mask: logoSrcImage, maskChannel: Channel.alpha);
 
@@ -151,7 +151,7 @@ class WallpaperGenerator {
             double centerX = ((wallpaperWidth * logoPosX) - logoWidth / 2);
             double centerY = ((wallpaperHeight * logoPosY) - logoHeight / 2);
 
-            updatingFunction("Working on logo [$i/${wallpaperLogos.length - 1}]... apply the logo...");
+            updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... apply the logo...");
             // Apply the logo into the final image
             finalImage = compositeImage(
               finalImage,
