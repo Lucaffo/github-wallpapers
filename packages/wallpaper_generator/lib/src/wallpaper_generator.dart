@@ -6,13 +6,18 @@ import 'package:paths_collection/src/path_url.dart';
 import 'dart:html';
 import 'dart:typed_data';
 
+import 'package:worker_database/worker_database.dart';
+
 class WallpaperGenerator {
 
   static final PathCollection logos = PathCollection("logos", "https://lucaffo.github.io/github-wallpapers/static/logos/paths.json");
   static final PathCollection octocats = PathCollection("octocats", "https://lucaffo.github.io/github-wallpapers/static/octocats/paths.json");
   static final PathCollection backgrounds = PathCollection("backgrounds", "https://lucaffo.github.io/github-wallpapers/static/backgrounds/paths.json");
 
-  static Future<Image?> generateWallpaper(Wallpaper wallpaper) async {
+  static Future<Uint8List?> generateWallpaper(Wallpaper wallpaper) async {
+
+    // Fetch the imageDB for image caching
+    WorkerDatabase imageDB = WorkerDatabase<ByteBuffer, String>("ImagesDB", "ImageStore");
 
     // Make sure to load all the urls
     await logos.readAllUrls();
@@ -43,10 +48,20 @@ class WallpaperGenerator {
 
       // If src is not null, try downloading the image.
       if(src != null && src.isNotEmpty) {
-        final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
-        if (res.status == 200) {
-          // Convert the response into array of bytes
-          Uint8List imageBytes = Uint8List.view((res.response as ByteBuffer));
+        
+        // Try to hit the image from cache or get via http
+        ByteBuffer? resCache = await imageDB.tryFetch(src);
+        if(resCache == null){
+          final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
+          if(res.status == 200){
+            resCache = res.response as ByteBuffer;
+            imageDB.tryPut(src, resCache);
+          }
+        }
+
+        // Convert the response into array of bytes
+        if(resCache != null){
+          Uint8List imageBytes = Uint8List.view(resCache);
           Image? backgroundSrcImage = decodeImage(imageBytes);
           if (backgroundSrcImage != null){
             finalImage.clear(ColorFromString.fromString(null)); // Apply default background color
@@ -92,11 +107,22 @@ class WallpaperGenerator {
 
         // If src is not null, try downloading the image.
         if(src != null && src.isNotEmpty) {
-          final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
-          if(res.status == 200) {
+
+          // Try to hit the image from cache or get via http
+          ByteBuffer? resCache = await imageDB.tryFetch(src);
+          if(resCache == null) {
+            final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
+            if(res.status == 200) {
+              resCache = res.response as ByteBuffer;
+              imageDB.tryPut(src, resCache);
+            }
+          }
+
+          // Convert the response into array of bytes
+          if(resCache != null) {
 
             // Decode the image from the bytes
-            Uint8List imageBytes = Uint8List.view((res.response as ByteBuffer));
+            Uint8List imageBytes = Uint8List.view(resCache);
             Image? logoSrcImage = decodeImage(imageBytes);
             if (logoSrcImage == null) continue;
             
@@ -127,6 +153,6 @@ class WallpaperGenerator {
       }
     }
 
-    return finalImage;
+    return finalImage.getBytes();
   }
 }

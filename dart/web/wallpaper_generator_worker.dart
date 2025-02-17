@@ -2,11 +2,15 @@ import 'dart:typed_data';
 import 'dart:convert';
 
 import 'dart:html';
+
 import 'package:wallpaper/wallpaper.dart';
 import 'package:wallpaper_generator/wallpaper_generator.dart';
-import 'package:image/image.dart' as img;
+import 'package:worker_database/worker_database.dart';
 
 void main() {
+
+  // Database for already generated wallpaper
+  WorkerDatabase wdb = WorkerDatabase<ByteBuffer, String>("WallpaperDB", "wallpaperBytesData");
   
   // Get the worker scope
   final DedicatedWorkerGlobalScope workerScope = DedicatedWorkerGlobalScope.instance;
@@ -21,11 +25,25 @@ void main() {
       
       // Generate and post the wallpaper bitmap as response
       if (data['wallpaper'] != null) {
+
+        // Generate the wallpaper object
         String wallpaperRawJson = jsonEncode(data['wallpaper']);
         Wallpaper? wallpaper = Wallpaper.fromRawJson(wallpaperRawJson);
+
+        // Fetch already generated if any
+        ByteBuffer? resCache = await wdb.tryFetch(wallpaper.toRawJson()); 
+        if(resCache != null){
+          print("Wallpaper Cache Hit from DB, posted to main thread.");
+          Uint8List byteArray = Uint8List.view(resCache);
+          workerScope.postMessage({'wallpaperBytes' : byteArray }, [byteArray.buffer]);
+          return;
+        }
+
+        // Generate the wallpaper
         Uint8List? res = await generateWallpaper(wallpaper);
         if (res != null) {
           print("Wallpaper Generated, posted to main thread.");
+          await wdb.tryPut(wallpaper.toRawJson(), res.buffer);
           workerScope.postMessage({'wallpaperBytes' : res }, [res.buffer]);
         } else {
           print("Wallpaper not Generated, something not doing well");
@@ -49,13 +67,11 @@ Future<Uint8List?> generateWallpaper(Wallpaper? wallpaper) async {
   }
 
   // Generate the wallpaper
-  img.Image? image = await WallpaperGenerator.generateWallpaper(wallpaper);
-  if (image == null) {
+  Uint8List? imageBytes = await WallpaperGenerator.generateWallpaper(wallpaper);
+  if (imageBytes == null) {
     print("Generated image is null, there it was an error in the wallpaper generation.");
     return null;
   }
-  
-  // Get the bytes and the data
-  final Uint8List imageBytes = image.getBytes();
+
   return imageBytes;
 }
