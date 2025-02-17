@@ -55,8 +55,8 @@ jobs:
           cp dart/web/index.html site/
           cp dart/web/main.js site/
           cp dart/web/wallpaper_generator_worker.js site/
-          cp dart/web/styles/. site/styles
-          cp dart/web/fonts/. site/fonts
+          cp -r dart/web/styles/. site/styles
+          cp -r dart/web/fonts/. site/fonts
           cp -r static/favicons/. site/static/favicons
           cp -r static/logos/. site/static/logos/
           cp -r static/octocats/. site/static/octocats/
