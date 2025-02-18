@@ -119,7 +119,7 @@ class WallpaperGenerator {
           ByteBuffer? resCache = await imageDB.tryFetch(src);
           if(resCache == null) {  
             updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... fetching the image...");
-            final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
+            final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer', requestHeaders: {"Access-Control-Allow-Origin" : "*"});
             if(res.status == 200) {
               resCache = res.response as ByteBuffer;
               imageDB.tryPut(src, resCache);
