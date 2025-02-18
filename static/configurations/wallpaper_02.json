@@ -1,22 +1,29 @@
 {
-  "version": 0,
-  "wallpaper": {
-    "width": 1920,
-    "height": 1080,
-    "logo": {
+  "width": 1920,
+  "height": 1080,
+  "logos": [
+    {
       "type": "logo",
       "name": "invertocat",
       "size": 0.5,
       "position": {
         "x": 0.5,
-        "y": 0.5
+        "y": 0.44
       },
-      "color": "rgba(255, 255, 255, 0.9)"
+      "color": "rgba(255, 255, 255, 1)"
     },
-    "background": {
-      "color": "rgb(0, 0, 0)",
-      "src": null,
-      "name": null
+    {
+      "type": "logo",
+      "name": "github_logo",
+      "size": 0.5,
+      "position": {
+        "x": 0.5,
+        "y": 0.65
+      },
+      "color": "rgba(255, 255, 255, 1)"
     }
+  ],
+  "background": {
+    "color": "rgba(0, 0, 0, 1)"
   }
 }

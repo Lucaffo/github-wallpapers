@@ -1,9 +1,8 @@
 {
-  "version": 0,
-  "wallpaper": {
-    "width": 1280,
-    "height": 2140,
-    "logo": {
+  "width": 1280,
+  "height": 2140,
+  "logos": [
+    {
       "type": "octocat",
       "name": "manufactureto",
       "size": 0.2,
@@ -12,10 +11,9 @@
         "y": 0.48
       },
       "color": "rgba(255, 255, 255, 0.95)"
-    },
-    "background": {
-      "color": "rgb(200, 200, 170)",
-      "src": null
     }
+  ],
+  "background": {
+    "color": "rgba(200, 200, 170, 1)"
   }
 }

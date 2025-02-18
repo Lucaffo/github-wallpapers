@@ -1,9 +1,8 @@
 {
-  "version": 0,
-  "wallpaper": {
-    "width": 1920,
-    "height": 1080,
-    "logo": {
+  "width": 1920,
+  "height": 1080,
+  "logos": [
+    {
       "type": "octocat",
       "name": "yoga",
       "size": 0.5,
@@ -12,10 +11,10 @@
         "y": 0.5
       },
       "color": "rgba(200, 180, 255, 1)"
-    },
-    "background": {
-      "color": "#888888",
-      "name": "space"
     }
+  ],
+  "background": {
+    "color": "rgba(136, 136, 136, 1)",
+    "name": "space"
   }
 }

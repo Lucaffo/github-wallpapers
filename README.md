@@ -18,25 +18,24 @@ What are you waiting for? Open the [Wallpaper Editor](https://lucaffo.github.io/
 ## Example
 ```json
 {
-  "version": 0,
-  "wallpaper": {
-    "width": 5120,
-    "height": 2160,
-    "logo": {
+  "width": 3440,
+  "height": 1440,
+  "logos": [
+    {
       "type": "logo",
       "name": "invertocat",
-      "size": 1,
+      "size": 0.4,
       "position": {
         "x": 0.5,
         "y": 0.5
       },
-      "color": "rgba(150, 150, 150, 0.8)"
-    },
-    "background": {
-      "color": "#888888",
-      "src": null,
-      "name": "japan"
+      "color": "rgba(255, 255, 255, 1)"
     }
+  ],
+  "background": {
+    "color": "rgba(255, 255, 255, 1)",
+    "name": "japan",
+    "src": null
   }
 }
 ```
@@ -49,4 +48,4 @@ Documentation, How to contribute...
 
 The site is under construction! Keep patience!
 
-<img src="https://raw.githubusercontent.com/Lucaffo/github-wallpapers/main/static/octocats/manufactureto.png"/>
+<img width="500" height="500" src="https://raw.githubusercontent.com/Lucaffo/github-wallpapers/main/static/octocats/manufactureto.png"/>

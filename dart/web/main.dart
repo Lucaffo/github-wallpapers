@@ -1,41 +1,49 @@
-import 'dart:html';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:html';
+import 'dart:async';
 
-import 'drawer/wallpaper_drawer.dart';
-import 'drawer/wallpaper_drawer_factory.dart';
+import 'package:wallpaper/wallpaper.dart';
 
-const String canvasId = "#output";
-const String textAreaId = "#input";
-const String saveBtnId = "#save-btn";
+final CanvasElement canvas = querySelector("#output") as CanvasElement;
+final OffscreenCanvas offscreenCanvas = canvas.transferControlToOffscreen();
+final OffscreenCanvasRenderingContext2D offCtx = offscreenCanvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
+
+final TextAreaElement textArea = document.querySelector("#input") as TextAreaElement;
+final ButtonElement saveBtn = document.querySelector("#save-btn") as ButtonElement;
+final DivElement loading = document.querySelector("#loading-panel") as DivElement;
+final ParagraphElement loadingMessage = document.querySelector("#loading-message") as ParagraphElement;
 
 const int numberOfConfigurations = 7;
+Timer? _debounceTimer;
+
+final String workerName = "wallpaper_generator_worker.js";
+Worker? worker;
 
 void main() async {
-    
-    // Set first wallpaper
-    await setFirstWallpaper();
 
-    // Bind the UI
-    bindUI();
+  // Set first wallpaper
+  await setFirstWallpaper();
+
+  // Bind the UI
+  bindUI();
 }
 
-Future<void> setFirstWallpaper () async {
-  (WallpaperDrawer?, String?) drawer = await WallpaperDrawerFactory.getWallpaperDrawer(Random.secure().nextInt(numberOfConfigurations) + 1);
-  setWallpaper(drawer.$1, drawer.$2);
+Future setFirstWallpaper() async {
+  HTTPWallpaperFactory httpWallpaperFactory = HTTPWallpaperFactory();
+  Wallpaper? wallpaper = await httpWallpaperFactory.getWallpaper(getRandomInitialConfiguration());
+  setWallpaper(wallpaper);
 }
 
 void bindUI() {
-    querySelector(textAreaId)?.onChange.listen((_) => updateWallpaper());
-    querySelector(textAreaId)?.onInput.listen((_) => updateWallpaper());
-    querySelector(saveBtnId)?.onClick.listen((_) => saveImage());
+  textArea.onInput.listen((_) => debounceUpdateWallpaper());
+  saveBtn.onClick.listen((_) => saveImage());
 }
 
 void saveImage() {
   print("Wallpaper Save");
-  CanvasElement canvas = querySelector(canvasId) as CanvasElement;
   String dataUrl = canvas.toDataUrl('image/png');
-  
+
   final anchor = AnchorElement(href: dataUrl)
     ..target = 'blank'
     ..download = 'canvas_image.png';
@@ -43,38 +51,66 @@ void saveImage() {
   anchor.click();
 }
 
-Future<void> updateWallpaper() async {
-  print("Wallpaper Update");
-  String compactJson = getJsonFromTextArea();
-  (WallpaperDrawer?, String?) drawer = await WallpaperDrawerFactory.getDrawerFromJson(compactJson);
-  updateCanvas(drawer.$1);
+void debounceUpdateWallpaper() {
+  _debounceTimer?.cancel();
+  _debounceTimer = Timer(Duration(milliseconds: 1500), () => updateWallpaper());
 }
 
-void setWallpaper(WallpaperDrawer? drawer, String? jsonString) {
-  if (drawer == null || jsonString == null) return;
-  setJsonInTextArea(jsonString);
-  updateCanvas(drawer);
+void updateWallpaper() {
+  print("Wallpaper Update");
+  String compactJson = getJsonFromTextArea();
+  Wallpaper? wallpaper = Wallpaper.fromRawJson(compactJson);
+  setWallpaper(wallpaper);
+}
+
+void setWallpaper(Wallpaper? wallpaper) {
+  if (wallpaper == null) return;
+  setJsonInTextArea(wallpaper.toRawJson());
+  updateCanvas(wallpaper);
 }
 
 void setJsonInTextArea(String? jsonString) {
   if (jsonString == null) return;
   Map<String, dynamic>? map = json.decoder.convert(jsonString);
   if (map == null) return;
-  TextAreaElement textArea = querySelector(textAreaId) as TextAreaElement;
   JsonEncoder encoder = JsonEncoder.withIndent('  ');
   String prettyprint = encoder.convert(map);
   textArea.text = prettyprint;
 }
 
-void updateCanvas(WallpaperDrawer? drawer) {
-  CanvasElement canvas = querySelector(canvasId) as CanvasElement;
-  CanvasRenderingContext2D ctx = canvas.context2D;
-  drawer?.draw(ctx);
+// Stop the current worker and start another one
+void updateCanvas(Wallpaper? wallpaper) {
+  if (wallpaper == null) return;
+  loading.style.visibility = "visible";
+  worker?.terminate();
+  worker = Worker(workerName);
+  worker?.onMessage.listen((MessageEvent event) {
+
+    if (event.data is Map && event.data.containsKey('wallpaperUpdates')) {
+      loadingMessage.text = event.data['wallpaperUpdates'];
+      return;
+    }
+
+    if (event.data is Map && event.data.containsKey('wallpaperBytes')) {
+      offscreenCanvas.width = wallpaper.width;
+      offscreenCanvas.height = wallpaper.height;
+      ImageData imageData = offCtx.createImageData(wallpaper.width, wallpaper.height);
+      imageData.data.setAll(0, event.data['wallpaperBytes']);
+      offCtx.putImageData(imageData, 0, 0);
+    }
+
+    loading.style.visibility = "hidden";
+  });
+  worker?.postMessage({'wallpaper' : wallpaper.toJson()});
 }
 
 String getJsonFromTextArea() {
-  TextAreaElement textArea = querySelector(textAreaId) as TextAreaElement;
   String jsonString = textArea.value!.trim();
   Map<String, dynamic> jsonData = jsonDecode(jsonString);
   return jsonEncode(jsonData);
+}
+
+Uri getRandomInitialConfiguration() {
+  int index = Random.secure().nextInt(numberOfConfigurations) + 1;
+  return Uri.parse("https://lucaffo.github.io/github-wallpapers/static/wallpapers/wallpaper_${index.toString().padLeft(2, '0')}.json");
 }

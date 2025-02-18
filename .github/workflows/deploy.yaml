@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - new-dart-generator
   workflow_dispatch:
 
 permissions:
@@ -22,14 +23,19 @@ jobs:
       - name: Setup Dart
         uses: dart-lang/setup-dart@v1
         with:
-          sdk: stable
+          sdk: 3.6.2
 
       - name: Install Dependencies
         run: |
           cd dart/web
           dart pub get
 
-      - name: Compile Dart to JavaScript
+      - name: Compile Worker to JavaScript
+        run: |
+          cd dart/web
+          dart compile js -o wallpaper_generator_worker.js wallpaper_generator_worker.dart
+          
+      - name: Compile Main to JavaScript
         run: |
           cd dart/web
           dart compile js -o main.js main.dart
@@ -44,9 +50,13 @@ jobs:
           mkdir -p site/static/backgrounds
           mkdir -p site/static/examples
           mkdir -p site/static/favicons
+          mkdir -p site/styles
+          mkdir -p site/fonts
           cp dart/web/index.html site/
           cp dart/web/main.js site/
-          cp dart/web/styles.css site/
+          cp dart/web/wallpaper_generator_worker.js site/
+          cp -r dart/web/styles/. site/styles
+          cp -r dart/web/fonts/. site/fonts
           cp -r static/favicons/. site/static/favicons
           cp -r static/logos/. site/static/logos/
           cp -r static/octocats/. site/static/octocats/

@@ -3,10 +3,9 @@ import 'dart:convert';
 
 /*
 *   Wallpaper Logo Position Class.
-*   This is responsible for the relative position of the logo on the canvas.
-*   Make sure the coordinates are clamped between 0..1.
+*   This represents a logo position.
 *
-*   Luca Raffo @ 04/02/2025
+*   Luca Raffo @ 12/02/2025
 */ 
 class WallpaperLogoPosition {
 

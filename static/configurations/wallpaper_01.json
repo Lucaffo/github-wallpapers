@@ -1,21 +1,20 @@
 {
-    "version": 0,
-    "wallpaper": {
-      "width": 1920,
-      "height": 1080,
-      "logo": {
-        "type": "octocat",
-        "name": "vinil",
-        "size": 0.6,
-        "position": {
-          "x": 0.5,
-          "y": 0.5
-        },
-        "color": "#CCCCCC"
+  "width": 1920,
+  "height": 1080,
+  "logos": [
+    {
+      "type": "octocat",
+      "name": "vinil",
+      "size": 0.6,
+      "position": {
+        "x": 0.5,
+        "y": 0.5
       },
-      "background": {
-        "color": "#CCCCCC",
-        "src": null
-      }
+      "color": "rgba(204, 204, 204, 1)"
     }
+  ],
+  "background": {
+    "color": "rgba(204, 204, 204, 1)",
+    "src": null
   }
+}
