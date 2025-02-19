@@ -15,6 +15,8 @@ Still looking for your own **CUSTOM** GitHub wallpaper? You haven't found anythi
 
 What are you waiting for? Open the [Wallpaper Editor](https://lucaffo.github.io/github-wallpapers/)!
 
+[Documentation](docs\Documentation.md)
+
 ## Example
 ```json
 {
@@ -34,8 +36,7 @@ What are you waiting for? Open the [Wallpaper Editor](https://lucaffo.github.io/
   ],
   "background": {
     "color": "rgba(255, 255, 255, 1)",
-    "name": "japan",
-    "src": null
+    "name": "japan"
   }
 }
 ```
@@ -43,9 +44,3 @@ What are you waiting for? Open the [Wallpaper Editor](https://lucaffo.github.io/
 Equals to
 
 <img src="https://raw.githubusercontent.com/Lucaffo/github-wallpapers/main/static/examples/japan_example.png"/>
-
-Documentation, How to contribute...
-
-The site is under construction! Keep patience!
-
-<img width="500" height="500" src="https://raw.githubusercontent.com/Lucaffo/github-wallpapers/main/static/octocats/manufactureto.png"/>
