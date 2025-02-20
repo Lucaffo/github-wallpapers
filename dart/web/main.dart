@@ -3,16 +3,18 @@ import 'dart:math';
 import 'dart:html';
 import 'dart:async';
 
+import 'package:code_mirror/code_mirror.dart';
 import 'package:wallpaper/wallpaper.dart';
 
 final CanvasElement canvas = querySelector("#output") as CanvasElement;
 final OffscreenCanvas offscreenCanvas = canvas.transferControlToOffscreen();
 final OffscreenCanvasRenderingContext2D offCtx = offscreenCanvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
 
-final TextAreaElement textArea = document.querySelector("#input") as TextAreaElement;
 final ButtonElement saveBtn = document.querySelector("#save-btn") as ButtonElement;
 final DivElement loading = document.querySelector("#loading-panel") as DivElement;
 final ParagraphElement loadingMessage = document.querySelector("#loading-message") as ParagraphElement;
+
+final CodeMirrorEditor codeEditor = CodeMirrorEditor("#input");
 
 const int numberOfConfigurations = 7;
 Timer? _debounceTimer;
@@ -21,7 +23,6 @@ final String workerName = "wallpaper_generator_worker.js";
 Worker? worker;
 
 void main() async {
-
   // Set first wallpaper
   await setFirstWallpaper();
 
@@ -36,8 +37,8 @@ Future setFirstWallpaper() async {
 }
 
 void bindUI() {
-  textArea.onInput.listen((_) => debounceUpdateWallpaper());
   saveBtn.onClick.listen((_) => saveImage());
+  codeEditor.onChange(debounceUpdateWallpaper);
 }
 
 void saveImage() {
@@ -58,25 +59,27 @@ void debounceUpdateWallpaper() {
 
 void updateWallpaper() {
   print("Wallpaper Update");
-  String compactJson = getJsonFromTextArea();
+  String? compactJson = codeEditor.getValue();
+  if (compactJson == null) return;
   Wallpaper? wallpaper = Wallpaper.fromRawJson(compactJson);
-  setWallpaper(wallpaper);
+  updateCanvas(wallpaper);
 }
 
 void setWallpaper(Wallpaper? wallpaper) {
   if (wallpaper == null) return;
-  setJsonInTextArea(wallpaper.toRawJson());
+  setJsonInCodeMirror(wallpaper.toRawJson());
   updateCanvas(wallpaper);
 }
 
-void setJsonInTextArea(String? jsonString) {
+void setJsonInCodeMirror(String? jsonString) {
   if (jsonString == null) return;
   Map<String, dynamic>? map = json.decoder.convert(jsonString);
   if (map == null) return;
   JsonEncoder encoder = JsonEncoder.withIndent('  ');
   String prettyprint = encoder.convert(map);
-  textArea.text = prettyprint;
+  codeEditor.setValue(prettyprint);
 }
+
 
 // Stop the current worker and start another one
 void updateCanvas(Wallpaper? wallpaper) {
@@ -102,12 +105,6 @@ void updateCanvas(Wallpaper? wallpaper) {
     loading.style.visibility = "hidden";
   });
   worker?.postMessage({'wallpaper' : wallpaper.toJson()});
-}
-
-String getJsonFromTextArea() {
-  String jsonString = textArea.value!.trim();
-  Map<String, dynamic> jsonData = jsonDecode(jsonString);
-  return jsonEncode(jsonData);
 }
 
 Uri getRandomInitialConfiguration() {

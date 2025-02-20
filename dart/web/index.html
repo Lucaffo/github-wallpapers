@@ -28,7 +28,7 @@
   </div>
 
   <div class="container">
-    <textarea id="input" cols="50" rows="22" spellcheck="false"></textarea>
+    <div class="codemirror-container" id="input"></div>
     <div class="handle" id="resize-handle"></div>
     <div class="canvas-container">
       <div id="loading-panel" class="loading-panel">
@@ -62,6 +62,14 @@
       canvasContainer.style.flex = `1`;
     }
   </script>
+
+  <!--Startup Code Mirror 5-->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/theme/material-darker.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/mode/javascript/javascript.min.js"></script>
+
+  <!--Application Startup-->
   <script src="main.js" type="text/javascript"></script>
 </body>
 
