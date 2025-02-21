@@ -2,8 +2,4 @@
 # Created by `dart pub`
 .dart_tool/
 *.deps
-main.js
-main.js.map
-web/main.js
-web/main.js.map
-*.js
+web/*.js

@@ -1,0 +1,31 @@
+.button-container {
+    z-index: 1;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .button {
+    position: relative;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    padding: 10px 20px;
+  }
+  
+  .button i {
+    font-size: 20px;
+    color: white;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }

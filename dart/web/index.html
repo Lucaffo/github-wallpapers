@@ -7,29 +7,35 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/x-icon" href="/github-wallpapers/static/favicons/favicon.ico">
-  <link rel="stylesheet" href="styles/styles.css">
+  <link rel="stylesheet" href="styles/buttons.css">
   <link rel="stylesheet" href="styles/loader.css">
+  <link rel="stylesheet" href="styles/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
 
-  <div class="home-button-container">
+  <!--Buttons-->
+  <div class="button-container">
     <a class="button" href="https://github.com/Lucaffo/github-wallpapers">
       <i class="fa fa-github"></i>
     </a>
     <a class="button" href="https://github.com/Lucaffo/github-wallpapers/blob/main/docs/documentation.md">
       <i class="fa fa-book"></i>
     </a>
-  </div>
-
-  <div class="save-button-container">
     <button class="button" id="save-btn">Save</button>
   </div>
 
+  <!--Main app container-->
   <div class="container">
+
+    <!--Editor-->
     <div class="codemirror-container" id="input"></div>
+
+    <!--Handle-->
     <div class="handle" id="resize-handle"></div>
+
+    <!--Canvas-->
     <div class="canvas-container">
       <div id="loading-panel" class="loading-panel">
         <div class="loader"></div>
@@ -38,30 +44,9 @@
       <canvas id="output" width="1920" height="1080"></canvas>
     </div>
   </div>
-  <script>
-    const handle = document.getElementById("resize-handle");
-    const textarea = document.getElementById("input");
-    const canvasContainer = document.querySelector(".canvas-container");
-    const canvas = document.getElementById("output");
-    
-    let isResizing = false;
-
-    handle.addEventListener("mousedown", (e) => {
-      isResizing = true;
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", () => {
-        isResizing = false;
-        document.removeEventListener("mousemove", onMouseMove);
-      });
-    });
-
-    function onMouseMove(e) {
-      if (!isResizing) return;
-      let newWidth = e.clientX;
-      textarea.style.flex = `0 0 ${newWidth}px`;
-      canvasContainer.style.flex = `1`;
-    }
-  </script>
+  
+  <!--Resize containers script-->
+  <script src="scripts/handleContainerResize.js"></script>
 
   <!--Startup Code Mirror 5-->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.5/codemirror.min.css">
