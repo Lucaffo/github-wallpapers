@@ -34,7 +34,6 @@ class WallpaperGenerator {
     WallpaperBackground? wallpaperBackground = wallpaper.background;
     if (wallpaperBackground != null) {
       
-      updatingFunction("Working on background... setup...");
       Color backgroundColor = ColorFromString.fromString(wallpaperBackground.color);
       finalImage = fill(finalImage, color: backgroundColor);
       
@@ -51,21 +50,22 @@ class WallpaperGenerator {
 
       // If src is not null, try downloading the image.
       if(src != null && src.isNotEmpty) {
-        updatingFunction("Working on background... convert the image...");
         
         // Try to fetch the already decoded image
+        updatingFunction("Try to fetch background from cache...");
         Image? backgroundSrcImage = await imageDatabase.fetchImage(src);
 
         // Decode the image
         if (backgroundSrcImage == null) { 
-          updatingFunction("First time decoding the background, it may take a while...");
           ByteBuffer? resultBytes;
-
+          
+          updatingFunction("Loading the background...");
           final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
           if(res.status == 200){
             resultBytes = res.response as ByteBuffer;
           }
 
+          updatingFunction("First time decoding the background, it may take a while...");
           if(resultBytes != null) {
             backgroundSrcImage = decodeImage(Uint8List.view(resultBytes));  
             if (backgroundSrcImage != null) {
@@ -76,11 +76,10 @@ class WallpaperGenerator {
         
         // Apply the background image if valid
         if (backgroundSrcImage != null) {
-          backgroundSrcImage = backgroundSrcImage.clone();
-          finalImage.clear(ColorFromString.fromString(null)); // Apply default background color
-          updatingFunction("Working on background... apply recoloring...");
+          finalImage.clear(ColorFromString.fromString(null));
+          updatingFunction("Recoloring the background...");
           backgroundSrcImage = scaleRgba(backgroundSrcImage, scale: backgroundColor);
-          updatingFunction("Working on background... apply the background...");
+          updatingFunction("Apply the background...");
           finalImage = compositeImage(finalImage, backgroundSrcImage);
         }
       }
@@ -91,7 +90,6 @@ class WallpaperGenerator {
     if (wallpaperLogos != null) {
       for (int i = 0; i < wallpaperLogos.length; i++) {
         WallpaperLogo wallpaperLogo = wallpaperLogos[i];
-        updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... setup...");
         String? src;
         String? type = wallpaperLogo.type;
         String? name = wallpaperLogo.name;
@@ -99,40 +97,41 @@ class WallpaperGenerator {
         WallpaperLogoPosition? position = wallpaperLogo.position;
 
         // Inject the src from name
+        PathUrl? path;
         if(name != null && name.isNotEmpty && type != null && type.isNotEmpty) {
           switch(type)
           {
             case "octocat":
-              PathUrl? octocatSrc = octocats.search(name);
-              if(octocatSrc != null) {
-                src = octocatSrc.getFullPath();
-              }
+              path = octocats.search(name);
               break;
             case "logo":
-              PathUrl? logoSrc = logos.search(name);
-              if(logoSrc != null) {
-                src = logoSrc.getFullPath();
-              }
+              path = logos.search(name);
               break;
           }
+        }
+        
+        if(path != null) {
+          src = path.getFullPath();
         }
 
         // If src is not null, try downloading the image.
         if(src != null && src.isNotEmpty) {
 
           // Try to hit the image from cache or get via http
+          updatingFunction("Try to fetch logo '${path!.getFileName(false)}' from cache...");
           Image? logoSrcImage = await imageDatabase.fetchImage(src);
 
           // Decode the image
           if(logoSrcImage == null) {  
-            updatingFunction("Decoding the logo [${i + 1}/${wallpaperLogos.length}]...");
             ByteBuffer? resultBytes;
             
+            updatingFunction("Fetch the logo '${path.getFileName(false)}' from the web...");
             final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
             if(res.status == 200){
               resultBytes = res.response as ByteBuffer;
             }
             
+            updatingFunction("First time decoding the logo '${path.getFileName(false)}', it may take a while...");
             if(resultBytes != null) {
               logoSrcImage = decodeImage(Uint8List.view(resultBytes));  
               if (logoSrcImage != null) {
@@ -143,10 +142,9 @@ class WallpaperGenerator {
           
           // The logo is not valid, to the next logo...
           if (logoSrcImage == null) continue;
-          logoSrcImage = logoSrcImage.clone();
 
           // Apply the color by multiplication
-          updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... apply recoloring...");
+          updatingFunction("Recoloring of logo '${path.getFileName(false)}'...");
           Color color = ColorFromString.fromString(wallpaperLogo.color);
           logoSrcImage = scaleRgba(logoSrcImage, scale: color, mask: logoSrcImage, maskChannel: Channel.alpha);
 
@@ -160,7 +158,7 @@ class WallpaperGenerator {
           double centerX = ((wallpaperWidth * logoPosX) - logoWidth / 2);
           double centerY = ((wallpaperHeight * logoPosY) - logoHeight / 2);
 
-          updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... apply the logo...");
+          updatingFunction("Apply the logo '${path.getFileName(false)}'...");
           
           // Apply the logo into the final image
           finalImage = compositeImage(
