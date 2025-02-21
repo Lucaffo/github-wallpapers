@@ -3,10 +3,9 @@ import 'package:wallpaper/wallpaper.dart';
 import 'package:wallpaper_generator/src/color_from_string.dart';
 import 'package:paths_collection/src/path_collection.dart';
 import 'package:paths_collection/src/path_url.dart';
+import 'package:wallpaper_generator/src/wallpaper_image_database.dart';
 import 'dart:html';
 import 'dart:typed_data';
-
-import 'package:worker_database/worker_database.dart';
 
 class WallpaperGenerator {
 
@@ -17,7 +16,7 @@ class WallpaperGenerator {
   static Future<Uint8List?> generateWallpaper(Wallpaper wallpaper, Function(String) updatingFunction) async {
 
     // Fetch the imageDB for image caching
-    WorkerDatabase imageDB = WorkerDatabase<ByteBuffer, String>("ImagesDB", "ImageStore");
+    WallpaperImageDatabase imageDatabase = WallpaperImageDatabase("ImagesDB", "ImageStore");
 
     // Make sure to load all the urls
     updatingFunction("Loading all the paths resources...");
@@ -52,31 +51,37 @@ class WallpaperGenerator {
 
       // If src is not null, try downloading the image.
       if(src != null && src.isNotEmpty) {
+        updatingFunction("Working on background... convert the image...");
         
-        // Try to hit the image from cache or get via http
-        ByteBuffer? resCache = await imageDB.tryFetch(src);
-        if(resCache == null){
-          updatingFunction("Working on background... fetching the image...");
+        // Try to fetch the already decoded image
+        Image? backgroundSrcImage = await imageDatabase.fetchImage(src);
+
+        // Decode the image
+        if (backgroundSrcImage == null) { 
+          updatingFunction("First time decoding the background, it may take a while...");
+          ByteBuffer? resultBytes;
+
           final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
           if(res.status == 200){
-            resCache = res.response as ByteBuffer;
-            imageDB.tryPut(src, resCache);
+            resultBytes = res.response as ByteBuffer;
+          }
+
+          if(resultBytes != null) {
+            backgroundSrcImage = decodeImage(Uint8List.view(resultBytes));  
+            if (backgroundSrcImage != null) {
+              imageDatabase.saveImage(src, backgroundSrcImage);
+            }
           }
         }
-
-        // Convert the response into array of bytes
-        if(resCache != null) {
-          updatingFunction("Working on background... convert the image...");
-          Uint8List imageBytes = Uint8List.view(resCache);
-          updatingFunction("Working on background... decoding the image...");
-          Image? backgroundSrcImage = decodeNamedImage(src, imageBytes);
-          if (backgroundSrcImage != null){
-            finalImage.clear(ColorFromString.fromString(null)); // Apply default background color
-            updatingFunction("Working on background... apply recoloring...");
-            backgroundSrcImage = scaleRgba(backgroundSrcImage, scale: backgroundColor);
-            updatingFunction("Working on background... apply the background...");
-            finalImage = compositeImage(finalImage, backgroundSrcImage);
-          }
+        
+        // Apply the background image if valid
+        if (backgroundSrcImage != null) {
+          backgroundSrcImage = backgroundSrcImage.clone();
+          finalImage.clear(ColorFromString.fromString(null)); // Apply default background color
+          updatingFunction("Working on background... apply recoloring...");
+          backgroundSrcImage = scaleRgba(backgroundSrcImage, scale: backgroundColor);
+          updatingFunction("Working on background... apply the background...");
+          finalImage = compositeImage(finalImage, backgroundSrcImage);
         }
       }
     }
@@ -116,55 +121,60 @@ class WallpaperGenerator {
         if(src != null && src.isNotEmpty) {
 
           // Try to hit the image from cache or get via http
-          ByteBuffer? resCache = await imageDB.tryFetch(src);
-          if(resCache == null) {  
-            updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... fetching the image...");
-            final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer', requestHeaders: {"Access-Control-Allow-Origin" : "*"});
-            if(res.status == 200) {
-              resCache = res.response as ByteBuffer;
-              imageDB.tryPut(src, resCache);
+          Image? logoSrcImage = await imageDatabase.fetchImage(src);
+
+          // Decode the image
+          if(logoSrcImage == null) {  
+            updatingFunction("Decoding the logo [${i + 1}/${wallpaperLogos.length}]...");
+            ByteBuffer? resultBytes;
+            
+            final HttpRequest res = await HttpRequest.request(src, responseType: 'arraybuffer');
+            if(res.status == 200){
+              resultBytes = res.response as ByteBuffer;
+            }
+            
+            if(resultBytes != null) {
+              logoSrcImage = decodeImage(Uint8List.view(resultBytes));  
+              if (logoSrcImage != null) {
+                imageDatabase.saveImage(src, logoSrcImage);
+              }
             }
           }
+          
+          // The logo is not valid, to the next logo...
+          if (logoSrcImage == null) continue;
+          logoSrcImage = logoSrcImage.clone();
 
-          // Convert the response into array of bytes
-          if(resCache != null) {
+          // Apply the color by multiplication
+          updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... apply recoloring...");
+          Color color = ColorFromString.fromString(wallpaperLogo.color);
+          logoSrcImage = scaleRgba(logoSrcImage, scale: color, mask: logoSrcImage, maskChannel: Channel.alpha);
 
-            // Decode the image from the bytes
-            updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... convert the image...");
-            Uint8List imageBytes = Uint8List.view(resCache);
-            updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... decode the image...");
-            Image? logoSrcImage = decodeNamedImage(src, imageBytes);
-            if (logoSrcImage == null) continue;
-            
-            // Apply the color by multiplication
-            updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... apply recoloring...");
-            Color color = ColorFromString.fromString(wallpaperLogo.color);
-            logoSrcImage = scaleRgba(logoSrcImage, scale: color, mask: logoSrcImage, maskChannel: Channel.alpha);
+          // Calculate the final logo position
+          int logoWidth = (logoSrcImage.width * size).toInt();
+          int logoHeight = (logoSrcImage.height * size).toInt();
 
-            // Calculate the final logo position
-            int logoWidth = (logoSrcImage.width * size).toInt();
-            int logoHeight = (logoSrcImage.height * size).toInt();
+          double logoPosX = position?.x != null ? position!.x : 0.5;
+          double logoPosY = position?.y != null ? position!.y : 0.5;
+          
+          double centerX = ((wallpaperWidth * logoPosX) - logoWidth / 2);
+          double centerY = ((wallpaperHeight * logoPosY) - logoHeight / 2);
 
-            double logoPosX = position?.x != null ? position!.x : 0.5;
-            double logoPosY = position?.y != null ? position!.y : 0.5;
-            
-            double centerX = ((wallpaperWidth * logoPosX) - logoWidth / 2);
-            double centerY = ((wallpaperHeight * logoPosY) - logoHeight / 2);
-
-            updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... apply the logo...");
-            // Apply the logo into the final image
-            finalImage = compositeImage(
-              finalImage,
-              logoSrcImage, 
-              dstX: centerX.toInt(),
-              dstY: centerY.toInt(), 
-              dstW: logoWidth, 
-              dstH: logoHeight);
+          updatingFunction("Working on logo [${i + 1}/${wallpaperLogos.length}]... apply the logo...");
+          
+          // Apply the logo into the final image
+          finalImage = compositeImage(
+            finalImage,
+            logoSrcImage, 
+            dstX: centerX.toInt(),
+            dstY: centerY.toInt(), 
+            dstW: logoWidth, 
+            dstH: logoHeight);
           }
         }
-      }
     }
 
+    // Return the final image
     return finalImage.getBytes();
   }
 }
