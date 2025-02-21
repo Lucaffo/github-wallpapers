@@ -1,5 +1,3 @@
-library;
-
 import 'dart:html';
 import 'dart:indexed_db';
 

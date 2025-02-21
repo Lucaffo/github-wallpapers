@@ -13,8 +13,8 @@ dependencies:
     path: ../wallpaper
   paths_collection:
     path: ../paths_collection
-  worker_database:
-    path: ../worker_database
+  worker_persistency:
+    path: ../worker_persistency
 
 dev_dependencies:
   lints: ^5.0.0

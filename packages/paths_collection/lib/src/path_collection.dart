@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'path_url.dart';
 import 'dart:html';
 
-import 'package:worker_database/worker_database.dart';
+import 'package:worker_persistency/src/worker_database.dart';
 
 /*
 *  Path Collection class.

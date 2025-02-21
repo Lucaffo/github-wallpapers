@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:image/image.dart';
 import 'package:wallpaper_generator/src/wallpaper_serializable_image.dart';
-import 'package:worker_database/worker_database.dart';
+import 'package:worker_persistency/src/worker_database.dart';
 
 /*
  * This class is capable of storing already decoded images into the DB.
