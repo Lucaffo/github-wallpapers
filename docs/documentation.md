@@ -37,7 +37,7 @@ Wallpaper width
 Wallpaper height
 
 ### Background (optional)
-The background is the first layer that is processed by the generator. Is totally optional, without it's displayed black.
+The background is the first layer that is processed by the generator. Is totally optional, without it's displayed transparent.
 
 **color** *(optional, default black)* <br> 
 Background color.
@@ -52,7 +52,7 @@ Background name. This is fetched from a collection of [backgrounds](https://gith
 You can have one or more logos inside the a list of logos. No logo is displayed if leaved blank.
 
 **type** *(optional, default null)* <br>
-Logo target collection when using the **name** paramerer. 
+Logo target collection when using the **name** parameter. 
 Two available collections: [logo](https://github.com/Lucaffo/github-wallpapers/tree/main/static/logos) and [octocats](https://github.com/Lucaffo/github-wallpapers/tree/main/static/octocats).
 
 **name** *(optional, default null)* <br>
