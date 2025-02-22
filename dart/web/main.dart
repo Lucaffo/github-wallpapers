@@ -4,23 +4,17 @@ import 'dart:html';
 import 'dart:async';
 
 import 'package:code_mirror/code_mirror.dart';
+import 'package:dart/views/wallpaper_canvas.dart';
 import 'package:wallpaper/wallpaper.dart';
 
-final CanvasElement canvas = querySelector("#output") as CanvasElement;
-final OffscreenCanvas offscreenCanvas = canvas.transferControlToOffscreen();
-final OffscreenCanvasRenderingContext2D offCtx = offscreenCanvas.getContext('2d') as OffscreenCanvasRenderingContext2D;
-
 final ButtonElement saveBtn = document.querySelector("#save-btn") as ButtonElement;
-final DivElement loading = document.querySelector("#loading-panel") as DivElement;
-final ParagraphElement loadingMessage = document.querySelector("#loading-message") as ParagraphElement;
 
 final CodeMirrorEditor codeEditor = CodeMirrorEditor("#input");
 
 const int numberOfConfigurations = 7;
 Timer? _debounceTimer;
 
-final String workerName = "wallpaper_generator_worker.js";
-Worker? worker;
+final WallpaperCanvas canvas = WallpaperCanvas("output");
 
 void main() async {
   // Set first wallpaper
@@ -37,19 +31,8 @@ Future setFirstWallpaper() async {
 }
 
 void bindUI() {
-  saveBtn.onClick.listen((_) => saveImage());
+  saveBtn.onClick.listen((_) => canvas.saveImage());
   codeEditor.onChange(debounceUpdateWallpaper);
-}
-
-void saveImage() {
-  print("Wallpaper Save");
-  String dataUrl = canvas.toDataUrl('image/png');
-
-  final anchor = AnchorElement(href: dataUrl)
-    ..target = 'blank'
-    ..download = 'canvas_image.png';
-
-  anchor.click();
 }
 
 void debounceUpdateWallpaper() {
@@ -80,31 +63,9 @@ void setJsonInCodeMirror(String? jsonString) {
   codeEditor.setValue(prettyprint);
 }
 
-
-// Stop the current worker and start another one
 void updateCanvas(Wallpaper? wallpaper) {
   if (wallpaper == null) return;
-  loading.style.visibility = "visible";
-  worker?.terminate();
-  worker = Worker(workerName);
-  worker?.onMessage.listen((MessageEvent event) {
-
-    if (event.data is Map && event.data.containsKey('wallpaperUpdates')) {
-      loadingMessage.text = event.data['wallpaperUpdates'];
-      return;
-    }
-
-    if (event.data is Map && event.data.containsKey('wallpaperBytes')) {
-      offscreenCanvas.width = wallpaper.width;
-      offscreenCanvas.height = wallpaper.height;
-      ImageData imageData = offCtx.createImageData(wallpaper.width, wallpaper.height);
-      imageData.data.setAll(0, event.data['wallpaperBytes']);
-      offCtx.putImageData(imageData, 0, 0);
-    }
-
-    loading.style.visibility = "hidden";
-  });
-  worker?.postMessage({'wallpaper' : wallpaper.toJson()});
+  canvas.setWallpaper(wallpaper);
 }
 
 Uri getRandomInitialConfiguration() {
