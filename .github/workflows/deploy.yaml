@@ -32,8 +32,7 @@ jobs:
 
       - name: Compile Worker to JavaScript
         run: |
-          cd dart/web
-          dart compile js -o wallpaper_generator_worker.js wallpaper_generator_worker.dart
+          dart compile js -o dart/web/wallpaper_generator_worker.js /dart/lib/workers/wallpaper_generator_worker.dart
           
       - name: Compile Main to JavaScript
         run: |

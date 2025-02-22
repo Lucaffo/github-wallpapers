@@ -54,7 +54,7 @@
                 "compile",
                 "js",
                 "-O1",
-                "${workspaceFolder}/dart/web/wallpaper_generator_worker.dart",
+                "${workspaceFolder}/dart/lib/workers/wallpaper_generator_worker.dart",
                 "-o",
                 "${workspaceFolder}/dart/web/wallpaper_generator_worker.js"
             ],
