@@ -16,7 +16,7 @@ class CodeMirrorEditor {
   };
 
   CodeMirrorEditor(String elementId) {
-    var element = document.querySelector(elementId);
+    var element = document.querySelector("#$elementId");
     if (element == null) {
       throw ArgumentError("Element cannot be found at ID '$elementId'");
     }
@@ -32,6 +32,7 @@ class CodeMirrorEditor {
     });
     
     _instance.callMethod('on', ['change', onChangeCallback]);
+    _instance.callMethod('on', ['keydown', onChangeCallback]);
   }
 
   /// Set the content of the editor.

@@ -28,9 +28,13 @@ class WallpaperBackground {
         src: json["src"],
     );
 
-    Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() {
+      var data = {
         "color": color,
         "name" : name,
         "src": src,
-    };
+      };
+      data.removeWhere((key, value) => value == null);
+      return data;
+    }
 }

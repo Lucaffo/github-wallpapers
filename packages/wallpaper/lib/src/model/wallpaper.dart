@@ -33,10 +33,15 @@ class Wallpaper {
         background: jsonContent["background"] == null ? null : WallpaperBackground.fromJson(jsonContent["background"]),
     );
 
-    Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() {
+      var data = {
         "width": width,
         "height": height,
         "logos": logos?.map((i) => i.toJson()).toList(),
         "background": background?.toJson(),
-    };
+      };
+      data.removeWhere((key, value) => value == null);
+      return data;
+    }
+
 }

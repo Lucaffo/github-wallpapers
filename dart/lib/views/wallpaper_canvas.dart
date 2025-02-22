@@ -32,6 +32,12 @@ class WallpaperCanvas {
     loadingMessage = document.querySelector("#$canvasName-loading-message") as ParagraphElement;
   }
 
+  /**
+   * Set the wallpaper of the canvas
+   * This will call an external worker that generate and set
+   * the canvas image. If called before the generation, it will discard the
+   * previous worker and start a new generation.
+   */
   void setWallpaper(Wallpaper wallpaper) {
     loading.style.visibility = "visible";
     worker?.terminate();
@@ -56,6 +62,10 @@ class WallpaperCanvas {
     worker?.postMessage({'wallpaper' : wallpaper.toJson()});
   }
 
+  /**
+   * Create and click a virtual anchor to download a file.
+   * It's based on the current state of the canvas.
+   */
   void saveImage() {
     print("Wallpaper Save");
     String dataUrl = canvas.toDataUrl('image/png');

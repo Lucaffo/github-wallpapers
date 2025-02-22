@@ -1,20 +1,18 @@
-import 'dart:convert';
 import 'dart:math';
 import 'dart:html';
 import 'dart:async';
 
-import 'package:code_mirror/code_mirror.dart';
 import 'package:dart/views/wallpaper_canvas.dart';
+import 'package:dart/views/wallpaper_code_editor.dart';
 import 'package:wallpaper/wallpaper.dart';
 
 final ButtonElement saveBtn = document.querySelector("#save-btn") as ButtonElement;
-
-final CodeMirrorEditor codeEditor = CodeMirrorEditor("#input");
 
 const int numberOfConfigurations = 7;
 Timer? _debounceTimer;
 
 final WallpaperCanvas canvas = WallpaperCanvas("output");
+final WallpaperCodeEditor editor = WallpaperCodeEditor("input");
 
 void main() async {
   // Set first wallpaper
@@ -30,45 +28,30 @@ Future setFirstWallpaper() async {
   setWallpaper(wallpaper);
 }
 
+Uri getRandomInitialConfiguration() {
+  int index = Random.secure().nextInt(numberOfConfigurations) + 1;
+  return Uri.parse("https://lucaffo.github.io/github-wallpapers/static/wallpapers/wallpaper_${index.toString().padLeft(2, '0')}.json");
+}
+
 void bindUI() {
   saveBtn.onClick.listen((_) => canvas.saveImage());
-  codeEditor.onChange(debounceUpdateWallpaper);
+  editor.onChange(debounceRefreshWallpaper);
 }
 
-void debounceUpdateWallpaper() {
+void debounceRefreshWallpaper() {
   _debounceTimer?.cancel();
-  _debounceTimer = Timer(Duration(milliseconds: 1500), () => updateWallpaper());
+  _debounceTimer = Timer(Duration(milliseconds: 1000), () => refreshWallpaper());
 }
 
-void updateWallpaper() {
-  print("Wallpaper Update");
-  String? compactJson = codeEditor.getValue();
-  if (compactJson == null) return;
-  Wallpaper? wallpaper = Wallpaper.fromRawJson(compactJson);
-  updateCanvas(wallpaper);
+void refreshWallpaper() {
+  print("Wallpaper Refresh");
+  Wallpaper? wallpaper = editor.getWallpaper();
+  if(wallpaper == null) return;
+  canvas.setWallpaper(wallpaper);
 }
 
 void setWallpaper(Wallpaper? wallpaper) {
   if (wallpaper == null) return;
-  setJsonInCodeMirror(wallpaper.toRawJson());
-  updateCanvas(wallpaper);
-}
-
-void setJsonInCodeMirror(String? jsonString) {
-  if (jsonString == null) return;
-  Map<String, dynamic>? map = json.decoder.convert(jsonString);
-  if (map == null) return;
-  JsonEncoder encoder = JsonEncoder.withIndent('  ');
-  String prettyprint = encoder.convert(map);
-  codeEditor.setValue(prettyprint);
-}
-
-void updateCanvas(Wallpaper? wallpaper) {
-  if (wallpaper == null) return;
+  editor.setWallpaper(wallpaper);
   canvas.setWallpaper(wallpaper);
-}
-
-Uri getRandomInitialConfiguration() {
-  int index = Random.secure().nextInt(numberOfConfigurations) + 1;
-  return Uri.parse("https://lucaffo.github.io/github-wallpapers/static/wallpapers/wallpaper_${index.toString().padLeft(2, '0')}.json");
 }

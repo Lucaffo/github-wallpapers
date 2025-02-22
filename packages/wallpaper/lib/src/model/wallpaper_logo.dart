@@ -35,11 +35,15 @@ class WallpaperLogo
 
     String toRawJson() => json.encode(toJson());
 
-    Map<String, dynamic> toJson() => {
+    Map<String, dynamic> toJson() {
+      var data = {
         "type": type,
         "name": name,
         "size": size,
         "position": position?.toJson(),
         "color": color,
-    };
+      };
+      data.removeWhere((key, value) => value == null);
+      return data;
+    }
 }
