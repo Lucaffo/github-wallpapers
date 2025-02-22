@@ -2,10 +2,8 @@ import 'package:image/image.dart';
 
 extension ColorFromString on Color {
 
-  static Color fromString(String? colorStr) {
-    // Default color if not provided
-    if(colorStr == null) return rgbaToColorUint8(0, 0, 0, 1.0);
-
+  static Color fromString(String colorStr) {
+    
     // Color from rgba
     if (colorStr.startsWith("rgba")) {
       List<String> rgbaList = colorStr.substring(5, colorStr.length - 1).split(",");

@@ -34,19 +34,26 @@ class WallpaperGenerator {
     WallpaperBackground? wallpaperBackground = wallpaper.background;
     if (wallpaperBackground != null) {
       
-      Color backgroundColor = ColorFromString.fromString(wallpaperBackground.color);
-      finalImage = fill(finalImage, color: backgroundColor);
-      
-      // Inject the src from name
+      // Take out all the parameters from the background
       String? src = wallpaperBackground.src;
       String? name = wallpaperBackground.name;
+      String? color = wallpaperBackground.color;
 
+      // Compute the colors
+      color ??= "rgba(255, 255, 255, 1.0)"; // Make sure default multiply color is white
+      Color defaultColor = ColorFromString.fromString("rgba(0, 0, 0, 1)");
+      Color multiplyColor = ColorFromString.fromString(color);
+
+      // Inject the src from name
       if(name != null && name.isNotEmpty) {
         PathUrl? backgroundSrc = backgrounds.search(name);
         if(backgroundSrc != null) {
             src = backgroundSrc.getFullPath();
         }
       }
+      
+      // Apply the background color
+      finalImage = fill(finalImage, color: multiplyColor);
 
       // If src is not null, try downloading the image.
       if(src != null && src.isNotEmpty) {
@@ -55,8 +62,8 @@ class WallpaperGenerator {
         updatingFunction("Try to fetch background from cache...");
         Image? backgroundSrcImage = await imageDatabase.fetchImage(src);
 
-        // Decode the image
-        if (backgroundSrcImage == null) { 
+        // Download and decode the image for the first times
+        if (backgroundSrcImage == null) {
           ByteBuffer? resultBytes;
           
           updatingFunction("Loading the background...");
@@ -76,9 +83,9 @@ class WallpaperGenerator {
         
         // Apply the background image if valid
         if (backgroundSrcImage != null) {
-          finalImage.clear(ColorFromString.fromString(null));
+          finalImage.clear(defaultColor);
           updatingFunction("Recoloring the background...");
-          backgroundSrcImage = scaleRgba(backgroundSrcImage, scale: backgroundColor);
+          backgroundSrcImage = scaleRgba(backgroundSrcImage, scale: multiplyColor);
           updatingFunction("Apply the background...");
           finalImage = compositeImage(finalImage, backgroundSrcImage);
         }
@@ -89,11 +96,14 @@ class WallpaperGenerator {
     List<WallpaperLogo>? wallpaperLogos = wallpaper.logos;
     if (wallpaperLogos != null) {
       for (int i = 0; i < wallpaperLogos.length; i++) {
+
+        // Take out all the parameters from the logo
         WallpaperLogo wallpaperLogo = wallpaperLogos[i];
         String? src;
         String? type = wallpaperLogo.type;
         String? name = wallpaperLogo.name;
-        double size = wallpaperLogo.size;
+        double? size = wallpaperLogo.size;
+        String? color = wallpaperLogo.color;
         WallpaperLogoPosition? position = wallpaperLogo.position;
 
         // Inject the src from name
@@ -145,10 +155,14 @@ class WallpaperGenerator {
 
           // Apply the color by multiplication
           updatingFunction("Recoloring of logo '${path.getFileName(false)}'...");
-          Color color = ColorFromString.fromString(wallpaperLogo.color);
-          logoSrcImage = scaleRgba(logoSrcImage, scale: color, mask: logoSrcImage, maskChannel: Channel.alpha);
+          color ??= "rgba(255, 255, 255, 1.0)"; // make sure default is white
+          logoSrcImage = scaleRgba(logoSrcImage,
+            scale: ColorFromString.fromString(color),
+            mask: logoSrcImage,
+            maskChannel: Channel.alpha);
 
           // Calculate the final logo position
+          size ??= 1.0; // make sure default is 1.0
           int logoWidth = (logoSrcImage.width * size).toInt();
           int logoHeight = (logoSrcImage.height * size).toInt();
 

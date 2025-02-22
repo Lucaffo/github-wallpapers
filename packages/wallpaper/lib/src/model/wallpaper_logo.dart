@@ -11,7 +11,7 @@ class WallpaperLogo
 {
     String? type;
     String? name;
-    double size;
+    double? size;
     WallpaperLogoPosition? position;
     String? color;
 
