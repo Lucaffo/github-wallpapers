@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - new-dart-generator
+      - apoclips
   workflow_dispatch:
 
 permissions:
