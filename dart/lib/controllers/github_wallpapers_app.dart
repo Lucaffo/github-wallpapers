@@ -40,14 +40,13 @@ class GithubWallpapersApp {
   }
   
   Future setRandomWallpaperFromConfigurations() async {
-    HTTPWallpaperFactory httpWallpaperFactory = HTTPWallpaperFactory();
-    Wallpaper? wallpaper = await httpWallpaperFactory.getWallpaper(getRandomInitialConfiguration());
+    Wallpaper? wallpaper = await Wallpaper.fromUrl(getRandomInitialConfiguration());
     setWallpaper(wallpaper);
   }
 
-  Uri getRandomInitialConfiguration() {
+  String getRandomInitialConfiguration() {
     int index = Random.secure().nextInt(numberOfConfigurations) + 1;
-    return Uri.parse("https://lucaffo.github.io/github-wallpapers/static/wallpapers/wallpaper_${index.toString().padLeft(2, '0')}.json");
+    return "https://lucaffo.github.io/github-wallpapers/static/wallpapers/wallpaper_${index.toString().padLeft(2, '0')}.json";
   }
 
   void refreshWallpaper() {

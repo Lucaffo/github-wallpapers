@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:http/http.dart';
 import 'wallpaper_background.dart';
 import 'wallpaper_logo.dart';
 
@@ -44,4 +45,13 @@ class Wallpaper {
       return data;
     }
 
+    static Future<Wallpaper?> fromUrl(String url) async {
+      return await fromUri(Uri.parse(url));
+    }
+
+    static Future<Wallpaper?> fromUri(Uri param) async {
+      final Response res = await get(param);
+      if (res.statusCode != 200) return null;
+      return Wallpaper.fromRawJson(res.body);
+    }
 }
