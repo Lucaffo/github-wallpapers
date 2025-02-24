@@ -12,8 +12,12 @@ import 'package:worker_persistency/src/worker_database.dart';
  */
 class WallpaperImageDatabase extends WorkerDatabase<dynamic, String> {
 
+  Duration cacheDuration = Duration(days: 1);
   WorkerDatabase decodedImageDB = WorkerDatabase<dynamic, String>("DecodedImagesDB", "DecodedImageStore");
-  WallpaperImageDatabase(super.dbName, super.storeName);
+
+  WallpaperImageDatabase(super.dbName, super.storeName, {Duration? cacheDuration}){
+    if(cacheDuration != null) this.cacheDuration = cacheDuration;
+  }
 
   // Fetch the Image Object from the DB, handling all the data conversion
   Future<Image?> fetchImage(String key) async {
@@ -22,6 +26,17 @@ class WallpaperImageDatabase extends WorkerDatabase<dynamic, String> {
     if(map.isNotEmpty) {
 
       WallpaperSerializableImage cachedBackground = WallpaperSerializableImage.fromJson(map);
+
+      // Make sure is valid
+      if(DateTime.now().difference(cachedBackground.time) >= cacheDuration) {
+
+        // Remove the entry from the db
+        await decodedImageDB.tryDelete(key);
+        return null;
+      }
+
+      // Reset the time if the resource is already available but used
+      cachedBackground.time = DateTime.now();
 
       // Clean the buffer in a way that offsets are removed
       final int expectedLength = cachedBackground.width * cachedBackground.height * 4;  // assumendo 4 canali
@@ -50,6 +65,7 @@ class WallpaperImageDatabase extends WorkerDatabase<dynamic, String> {
       Uint8List rawBytes = Uint8List.fromList(image.getBytes());
 
       decodedImageDB.tryPut(key, WallpaperSerializableImage(
+        time: DateTime.now(),
         width: image.width, 
         height: image.height, 
         buffer: rawBytes.buffer).toJson());

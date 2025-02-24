@@ -16,7 +16,7 @@ class WallpaperGenerator {
   static Future<Uint8List?> generateWallpaper(Wallpaper wallpaper, Function(String) updatingFunction) async {
 
     // Fetch the imageDB for image caching
-    WallpaperImageDatabase imageDatabase = WallpaperImageDatabase("ImagesDB", "ImageStore");
+    WallpaperImageDatabase imageDatabase = WallpaperImageDatabase("ImagesDB", "ImageStore", cacheDuration: Duration(minutes: 5));
 
     // Make sure to load all the urls
     updatingFunction("Loading all the paths resources...");

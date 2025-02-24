@@ -1,6 +1,8 @@
 import 'dart:html';
 import 'dart:indexed_db';
 
+import 'package:worker_persistency/src/exceptions/worker_database_exception.dart';
+
 /*
  * Permanent Worker Database
  * 
@@ -17,18 +19,12 @@ class WorkerDatabase<T, K> {
 
   // Try to fetch a already loaded data in the db
   Future<T?> tryFetch(K key) async {
-    
-    await _loadDatabase();
-    if(_db == null){ 
-      print("WorkerDatabase Error: Database not loaded");
-      return null; 
-    }
-
-    var tx = _db!.transaction(storeName, "readonly");
-    var os = tx.objectStore(storeName);
-
     try
     {
+      await _loadDatabase();
+      await _checkDatabase();
+      var tx = _db!.transaction(storeName, "readonly");
+      var os = tx.objectStore(storeName);
       var objectRequest = await os.getObject(key);
       await tx.completed;
       if (objectRequest == null) return null;
@@ -42,22 +38,42 @@ class WorkerDatabase<T, K> {
 
   // Try to put the data inside the databse
   Future tryPut(K key, T data) async {
-    
-    await _loadDatabase();
-    if(_db == null) { 
-      print("WorkerDatabase Error: Database not loaded");
-      return null;
-    }
-
-    var tx = _db!.transaction(storeName, "readwrite");
-    var os = tx.objectStore(storeName);
-
     try {
+      await _loadDatabase();
+      await _checkDatabase();  
+      var tx = _db!.transaction(storeName, "readwrite");
+      var os = tx.objectStore(storeName);
       await os.put(data, key);
       await tx.completed;
-      print("Cached $key");
+      print("Stored $key");
     } catch (e) {
       print("Put Error: $e");
+    }
+  }
+
+  // Try delete a data using the key
+  Future<bool> tryDelete(K key, {String? motivation}) async {
+    try {
+      await _loadDatabase();
+      await _checkDatabase();
+      var tx = _db!.transaction(storeName, "readwrite");
+      var os = tx.objectStore(storeName);
+      await os.delete(key);
+      await tx.completed;
+      print("Deleted $key. Motivation: $motivation");
+      return true;
+    } catch(e) {
+      print("Delete Error: $e");
+    }
+
+    return false;
+  }
+
+
+  // Check database validity or throw exception
+  Future _checkDatabase() async {
+    if(_db == null) {
+      throw DatabaseException("Database not loaded");
     }
   }
 
