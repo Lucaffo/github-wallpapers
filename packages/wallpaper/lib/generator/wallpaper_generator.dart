@@ -4,7 +4,7 @@ import 'package:wallpaper/wallpaper.dart';
 import 'package:wallpaper/utils/color_from_string.dart';
 import 'package:paths_collection/path_collection.dart';
 import 'package:paths_collection/path_url.dart';
-import 'package:wallpaper/generator/wallpaper_image_database.dart';
+import 'package:wallpaper/storage/decoded_image_storage.dart';
 import 'dart:html';
 import 'dart:typed_data';
 
@@ -17,7 +17,7 @@ class WallpaperGenerator {
   static Future<Uint8List?> generateWallpaper(Wallpaper wallpaper, Function(String)? updatingFunction) async {
 
     // Fetch the imageDB for image caching
-    WallpaperImageDatabase imageDatabase = WallpaperImageDatabase("ImagesDB", "ImageStore", cacheDuration: Duration(minutes: 5));
+    DecodedImageStorage decodedImages = DecodedImageStorage();
     SendPort<String> caller = SendPort<String>(updatingFunction);
 
     // Make sure to load all the urls
@@ -62,7 +62,7 @@ class WallpaperGenerator {
         
         // Try to fetch the already decoded image
         caller.send("Try to fetch background from cache...");
-        Image? backgroundSrcImage = await imageDatabase.fetchImage(src);
+        Image? backgroundSrcImage = await decodedImages.fetchImage(src);
 
         // Download and decode the image for the first times
         if (backgroundSrcImage == null) {
@@ -78,7 +78,7 @@ class WallpaperGenerator {
           if(resultBytes != null) {
             backgroundSrcImage = decodeImage(Uint8List.view(resultBytes));  
             if (backgroundSrcImage != null) {
-              imageDatabase.saveImage(src, backgroundSrcImage);
+              decodedImages.saveImage(src, backgroundSrcImage);
             }
           }
         }
@@ -131,7 +131,7 @@ class WallpaperGenerator {
 
           // Try to hit the image from cache or get via http
           caller.send("Try to fetch logo '${path!.getFileName(false)}' from cache...");
-          Image? logoSrcImage = await imageDatabase.fetchImage(src);
+          Image? logoSrcImage = await decodedImages.fetchImage(src);
 
           // Decode the image
           if(logoSrcImage == null) {  
@@ -147,7 +147,7 @@ class WallpaperGenerator {
             if(resultBytes != null) {
               logoSrcImage = decodeImage(Uint8List.view(resultBytes));  
               if (logoSrcImage != null) {
-                imageDatabase.saveImage(src, logoSrcImage);
+                decodedImages.saveImage(src, logoSrcImage);
               }
             }
           }

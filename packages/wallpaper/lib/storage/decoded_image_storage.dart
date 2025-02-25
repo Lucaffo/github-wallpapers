@@ -1,37 +1,39 @@
 import 'dart:typed_data';
 
 import 'package:image/image.dart';
-import 'package:wallpaper/generator/wallpaper_serializable_image.dart';
+import 'package:wallpaper/storage/serializable_image.dart';
 import 'package:worker_persistency/worker_database.dart';
 
 /*
  * This class is capable of storing already decoded images into the DB.
  * Retrieving already decoded images improves the performance a LOT.
  * 
+ * Also it has duration mechanism where the data is discarded after a time.
+ * 
  * 21/02/2025 @ Luca Raffo
  */
-class WallpaperImageDatabase extends WorkerDatabase<dynamic, String> {
+class DecodedImageStorage {
 
-  Duration cacheDuration = Duration(days: 1);
-  WorkerDatabase decodedImageDB = WorkerDatabase<dynamic, String>("DecodedImagesDB", "DecodedImageStore");
+  Duration cacheDuration = Duration(hours: 3);
+  WorkerDatabase imageDatabase = WorkerDatabase<dynamic, String>("Images", "Decoded");
 
-  WallpaperImageDatabase(super.dbName, super.storeName, {Duration? cacheDuration}){
+  DecodedImageStorage({Duration? cacheDuration}){
     if(cacheDuration != null) this.cacheDuration = cacheDuration;
   }
-
+  
   // Fetch the Image Object from the DB, handling all the data conversion
   Future<Image?> fetchImage(String key) async {
-    dynamic jsMap = await decodedImageDB.tryFetch(key);
+    dynamic jsMap = await imageDatabase.tryFetch(key);
     Map<String, dynamic> map = Map.from(jsMap == null ? Map.identity() : Map.from(jsMap));
     if(map.isNotEmpty) {
 
-      WallpaperSerializableImage cachedBackground = WallpaperSerializableImage.fromJson(map);
+      SerializableImage cachedBackground = SerializableImage.fromJson(map);
 
       // Make sure is valid
       if(DateTime.now().difference(cachedBackground.time) >= cacheDuration) {
 
         // Remove the entry from the db
-        await decodedImageDB.tryDelete(key);
+        await imageDatabase.tryDelete(key, motivation: "expired");
         return null;
       }
 
@@ -64,7 +66,7 @@ class WallpaperImageDatabase extends WorkerDatabase<dynamic, String> {
       // Make sure to get the raw data
       Uint8List rawBytes = Uint8List.fromList(image.getBytes());
 
-      decodedImageDB.tryPut(key, WallpaperSerializableImage(
+      imageDatabase.tryPut(key, SerializableImage(
         time: DateTime.now(),
         width: image.width, 
         height: image.height, 

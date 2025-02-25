@@ -1,18 +1,19 @@
 import 'dart:typed_data';
 
 /*
- * A Serializable image class.
+ * Serializable Image class.
  * This is used to serialize correctly an image data.
  * 
  * 21/02/2025 @ Luca Raffo
  */
-class WallpaperSerializableImage {
+class SerializableImage {
+
   DateTime time;
   final int width;
   final int height;
   final ByteBuffer buffer;
 
-  WallpaperSerializableImage({
+  SerializableImage({
     required this.time,
     required this.width,
     required this.height,
@@ -26,8 +27,8 @@ class WallpaperSerializableImage {
     'buffer': buffer, 
   };
 
-  factory WallpaperSerializableImage.fromJson(Map<String, dynamic> json) {
-    return WallpaperSerializableImage(
+  factory SerializableImage.fromJson(Map<String, dynamic> json) {
+    return SerializableImage(
       time: json['time'] ?? DateTime.now(),
       width: json['width'],
       height: json['height'],
