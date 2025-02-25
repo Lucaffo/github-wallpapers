@@ -1,12 +1,8 @@
-library;
-
 import 'dart:typed_data';
 import 'dart:convert';
-
 import 'dart:html';
 
 import 'package:wallpaper/wallpaper.dart';
-import 'package:wallpaper/generator/wallpaper_generator.dart';
 
 class WallpaperWorker {
 
@@ -33,10 +29,12 @@ class WallpaperWorker {
 
           // Generate the wallpaper object
           String wallpaperRawJson = jsonEncode(data['wallpaper']);
-          Wallpaper? wallpaper = Wallpaper.fromRawJson(wallpaperRawJson);
+          Wallpaper wallpaper = Wallpaper.fromRawJson(wallpaperRawJson);
 
-          // Generate the wallpaper
-          Uint8List? res = await generateWallpaper(wallpaper);
+          // Store here the result of the generation
+          Uint8List? res = await wallpaper.generate(updatingFunction: sendUpdatingMsgToMain);;
+
+          // Check the generation result
           if (res != null) {
             print("Wallpaper Generated, posted to main thread.");
             workerScope.postMessage({deliveryMsg : res }, [res.buffer]);
@@ -53,27 +51,5 @@ class WallpaperWorker {
   static void sendUpdatingMsgToMain(String message){
     final DedicatedWorkerGlobalScope workerScope = DedicatedWorkerGlobalScope.instance;
     workerScope.postMessage({updatingMsg : message});
-  }
-
-  // Generate the wallpaper into a byte array
-  // this format is friendly to postMessage despite BitmapImage or OffscreenCanvas
-  // cause for some reason in dart this object are set to null after despite they
-  // are "transferable"... idk. Bruteforcing to Uint8List works like a charm.
-  static Future<Uint8List?> generateWallpaper(Wallpaper? wallpaper) async {
-    
-    // Check if the wallpaper is not null
-    if (wallpaper == null) {
-      print("Wallpaper is null, cannot generate a null wallpaper.");
-      return null;
-    }
-
-    // Generate the wallpaper
-    Uint8List? imageBytes = await WallpaperGenerator.generateWallpaper(wallpaper, sendUpdatingMsgToMain);
-    if (imageBytes == null) {
-      print("Generated image is null, there it was an error in the wallpaper generation.");
-      return null;
-    }
-
-    return imageBytes;
   }
 }

@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:http/http.dart';
-import 'wallpaper_background.dart';
-import 'wallpaper_logo.dart';
+
+import 'package:wallpaper/model/wallpaper_background.dart';
+import 'package:wallpaper/model/wallpaper_logo.dart';
+import 'package:wallpaper/generator/wallpaper_generator.dart';
 
 /*
 *   Wallpaper Class.
@@ -45,13 +48,31 @@ class Wallpaper {
       return data;
     }
 
+    // Create a wallpaper model from an url
     static Future<Wallpaper?> fromUrl(String url) async {
       return await fromUri(Uri.parse(url));
     }
 
+    // Create a wallpaper model form an uri
     static Future<Wallpaper?> fromUri(Uri param) async {
       final Response res = await get(param);
       if (res.statusCode != 200) return null;
       return Wallpaper.fromRawJson(res.body);
+    }
+
+    // Generate a wallpaper from the model into a byte array
+    // this format is friendly to postMessage despite BitmapImage or OffscreenCanvas
+    // cause for some reason in dart this object are set to null after despite they
+    // are "transferable"... idk. Bruteforcing to Uint8List works like a charm.
+    Future<Uint8List?> generate({Function(String)? updatingFunction}) async {
+
+      // Generate the wallpaper
+      Uint8List? imageBytes = await WallpaperGenerator.generateWallpaper(this, updatingFunction);
+      if (imageBytes == null) {
+        print("Generated image is null, there it was an error in the wallpaper generation.");
+        return null;
+      }
+
+      return imageBytes;
     }
 }
