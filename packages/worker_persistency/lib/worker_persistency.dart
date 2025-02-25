@@ -1,3 +1,3 @@
 library;
 
-export 'src/worker_database.dart';
+export 'worker_database.dart';

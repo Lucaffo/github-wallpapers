@@ -1,7 +1,7 @@
 import 'dart:html';
 import 'dart:indexed_db';
 
-import 'package:worker_persistency/src/exceptions/worker_database_exception.dart';
+import 'package:worker_persistency/exceptions/worker_database_exception.dart';
 
 /*
  * Permanent Worker Database

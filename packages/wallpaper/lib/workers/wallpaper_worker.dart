@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'dart:html';
 
 import 'package:wallpaper/wallpaper.dart';
-import 'package:wallpaper_generator/wallpaper_generator.dart';
+import 'package:wallpaper/generator/wallpaper_generator.dart';
 
 class WallpaperWorker {
 

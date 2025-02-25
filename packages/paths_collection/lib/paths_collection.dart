@@ -1,4 +1,4 @@
 library;
 
-export 'src/path_collection.dart';
-export 'src/path_url.dart';
+export 'path_collection.dart';
+export 'path_url.dart';

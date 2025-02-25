@@ -1,3 +1,3 @@
-import 'package:wallpaper_worker/wallpaper_worker.dart';
+import 'package:wallpaper/workers/wallpaper_worker.dart';
 
 void main() { WallpaperWorker.initialize(); }
